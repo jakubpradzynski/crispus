@@ -20,7 +20,7 @@ client-server or RMI architecture) OR access to the database
 - have at least 1000 (senseable) code lines.
 - Use object-oriented programming sensibly!
 
-![What will be assessed?] (https://drive.google.com/file/d/1SIt4mHwNd16yVs86o4RcQofZ4nBmgRiz/view?usp=sharing "Evaluation").
+![What will be assessed?](https://raw.githubusercontent.com/jakubpradzynski/crispus/master/Ocenianie%20projektu%20zaliczeniowego.png "Evaluation")
 
 
 ## Used technologies:
