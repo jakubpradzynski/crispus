@@ -1,0 +1,53 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.1.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'application'
+apply plugin: 'groovy'
+
+mainClassName = 'pl.jakubpradzynski.crispus.CrispusApplication'
+
+group = 'pl.jakubpradzynski'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+jar {
+    baseName = 'gs-gradle'
+    version =  '0.1.0'
+}
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.security:spring-security-web')
+	compile('org.springframework.security:spring-security-config')
+	compile('org.webjars:jquery:3.2.1')
+	compile('org.webjars:bootstrap:4.0.0')
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.15.Final'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.1.7.Final'
+	runtime('com.h2database:h2')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.codehaus.groovy:groovy-all:2.4.10')
+    testCompile('junit:junit:4.12')
+}
