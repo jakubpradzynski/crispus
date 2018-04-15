@@ -15,6 +15,7 @@ public class PhoneCaseImpl implements
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value.equals("")) return true;
         Pattern pattern = Pattern.compile("^\\d{3}-\\d{3}-\\d{3}$");
         Matcher matcher = pattern.matcher(value);
 

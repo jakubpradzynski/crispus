@@ -4,6 +4,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -36,8 +37,8 @@ public class PhoneCaseTest {
         user.setPasswordHash("test");
         user.setSalt("test");
         user.setUserType(new UserType());
-        user.setPlaces(Arrays.asList(new Place()));
-        user.setTransactionCategories(Arrays.asList(new TransactionCategory()));
+        user.setPlaces(Collections.EMPTY_SET);
+        user.setTransactionCategories(Collections.EMPTY_SET);
     }
 
     @Test

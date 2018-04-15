@@ -5,11 +5,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import pl.jakubpradzynski.crispus.api.dto.UserDto;
 import pl.jakubpradzynski.crispus.domain.User;
+import pl.jakubpradzynski.crispus.exceptions.EmailExistsException;
 import pl.jakubpradzynski.crispus.repositories.PlaceRepository;
 import pl.jakubpradzynski.crispus.repositories.TransactionCategoryRepository;
 import pl.jakubpradzynski.crispus.repositories.UserRepository;
 import pl.jakubpradzynski.crispus.repositories.UserTypeRepository;
+import pl.jakubpradzynski.crispus.services.UserService;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -18,17 +21,11 @@ import java.util.Locale;
 @Scope("singleton")
 public class Starter implements CommandLineRunner {
 
-    @Autowired
-    public UserTypeRepository userTypeRepository;
-
-    @Autowired
-    public UserRepository userRepository;
-
-    @Autowired
-    public PlaceRepository placeRepository;
-
-    @Autowired
-    public TransactionCategoryRepository transactionCategoryRepository;
+    @Autowired public UserTypeRepository userTypeRepository;
+    @Autowired public UserRepository userRepository;
+    @Autowired public UserService userService;
+    @Autowired public PlaceRepository placeRepository;
+    @Autowired public TransactionCategoryRepository transactionCategoryRepository;
 
     @Override
     public void run(String... args) {
@@ -46,11 +43,16 @@ public class Starter implements CommandLineRunner {
         transactionCategoryRepository.createTransactionCategory("Ubrania", null);
         transactionCategoryRepository.createTransactionCategory("Napoje", null);
         transactionCategoryRepository.createTransactionCategory("Wypłata z pracy", null);
-
-        System.out.println(userTypeRepository.getAllUserTypes());
-        System.out.println(placeRepository.getAllPlaces());
-        System.out.println(transactionCategoryRepository.getAllTransactionCategories());
-        System.out.println(placeRepository.getAllPreDefinedPlaces());
-        System.out.println(transactionCategoryRepository.getAllPreDefinedTransactionCategories());
+        try {
+            userService.registerNewUserAccount(new UserDto
+                    .UserDtoBuilder("Jan", "Kowalski")
+                    .email("jankowalski@gmail.com")
+                    .phoneNumber("751-455-339")
+                    .password("1234")
+                    .matchingPassword("1234")
+                    .build());
+        } catch (EmailExistsException e) {
+            e.printStackTrace();
+        }
     }
 }

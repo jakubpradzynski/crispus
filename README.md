@@ -7,8 +7,7 @@ Applications using access to the Database as a web application (server/portlet)
 
 
 ## Theme:
-56. Cookbook - possibility of adding recipes and products to the database. For each food, the calorific value is to be calculated automatically.
-
+The application is used to calculate expenses and revenues and to control the household budget.
 
 ## Guidelines:
 The draft should include
@@ -25,4 +24,6 @@ client-server or RMI architecture) OR access to the database
 
 ## Used technologies:
 - Java 8
-- Spring Framework
+- Spring Boot
+- Hibernate
+- Thymeleaf

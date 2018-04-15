@@ -6,15 +6,14 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class MatchesPasswordImpl implements
-        ConstraintValidator<MatchesPassword, Object> {
+        ConstraintValidator<MatchesPassword, UserDto> {
 
     @Override
     public void initialize(MatchesPassword constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(Object obj, ConstraintValidatorContext context){
-        UserDto user = (UserDto) obj;
+    public boolean isValid(UserDto user, ConstraintValidatorContext context){
         return user.getPassword().equals(user.getMatchingPassword());
     }
 }

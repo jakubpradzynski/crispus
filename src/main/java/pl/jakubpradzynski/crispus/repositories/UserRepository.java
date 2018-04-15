@@ -7,10 +7,12 @@ import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.domain.UserType;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -35,9 +37,13 @@ public class UserRepository {
     }
 
     public User getUserByEmail(String email) {
-        return entityManager.createQuery("SELECT u FROM USER u WHERE u.email=:email", User.class)
-                .setParameter("email", email)
-                .getSingleResult();
+        try {
+            return entityManager.createQuery("SELECT u FROM USER u WHERE u.email=:email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public Collection<User> getAllUsers() {

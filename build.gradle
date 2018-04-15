@@ -38,12 +38,12 @@ jar {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.9.RELEASE'
+    compile group: 'org.thymeleaf', name: 'thymeleaf-spring5', version: '3.0.9.RELEASE'
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.security:spring-security-web')
-	compile('org.springframework.security:spring-security-config')
-	compile('org.webjars:jquery:3.2.1')
-	compile('org.webjars:bootstrap:4.0.0')
+	compile group: 'org.webjars', name: 'jquery', version: '3.3.1'
+	compile group: 'org.webjars', name: 'bootstrap', version: '4.0.0'
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.15.Final'
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.1.7.Final'
 	runtime('com.h2database:h2')

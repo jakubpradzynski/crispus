@@ -23,14 +23,14 @@ public class RegistrationController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/user/registration", method = RequestMethod.GET)
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String showRegistrationForm(WebRequest request, Model model) {
         UserDto userDto = new UserDto();
         model.addAttribute("user", userDto);
-        return "registration.html";
+        return "registration";
     }
 
-    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView registerUserAccount
             (@ModelAttribute("user") @Valid UserDto accountDto,
              BindingResult result, WebRequest request, Errors errors) {
@@ -39,13 +39,13 @@ public class RegistrationController {
             registered = createUserAccount(accountDto, result);
         }
         if (registered == null) {
-            result.rejectValue("email", "message.regError");
+            result.rejectValue("email", "invalid.email");
         }
         if (result.hasErrors()) {
-            return new ModelAndView("registration.html", "user", accountDto);
+            return new ModelAndView("registration", "user", accountDto);
         }
         else {
-            return new ModelAndView("successRegister.html", "user", accountDto);
+            return new ModelAndView("successRegister", "user", accountDto);
         }
     }
 
