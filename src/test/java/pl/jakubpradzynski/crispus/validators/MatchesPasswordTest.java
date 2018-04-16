@@ -2,7 +2,7 @@ package pl.jakubpradzynski.crispus.validators;
 
 import org.junit.Before;
 import org.junit.Test;
-import pl.jakubpradzynski.crispus.api.dto.UserDto;
+import pl.jakubpradzynski.crispus.dto.UserDto;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

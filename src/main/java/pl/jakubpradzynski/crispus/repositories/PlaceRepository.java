@@ -8,6 +8,7 @@ import pl.jakubpradzynski.crispus.domain.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +49,26 @@ public class PlaceRepository {
     public Collection<Place> getAllPreDefinedPlaces() {
         return entityManager.createQuery("SELECT p FROM PLACE p", Place.class)
                 .getResultList().stream().filter(place -> place.getUsers().isEmpty()).collect(Collectors.toSet());
+    }
+
+    public Collection<String> getAllPlacesDescriptionsAvailableForUser(User user) {
+        Collection<Place> preDefinedPlaces = getAllPreDefinedPlaces();
+        Collection<String> allPlacesDescriptions = new ArrayList<>();
+        preDefinedPlaces.forEach(place -> allPlacesDescriptions.add(place.getDescription()));
+
+        Collection<Place> userDefinedPlaces = entityManager.createQuery("SELECT p FROM PLACE p WHERE :user in elements(p.users)", Place.class)
+                .setParameter("user", user)
+                .getResultList();
+
+        userDefinedPlaces.forEach(place -> allPlacesDescriptions.add(place.getDescription()));
+
+        return allPlacesDescriptions;
+    }
+
+    public Integer getUserUsedPlacesNumber(User user) {
+        return entityManager.createQuery("SELECT COUNT(p) FROM PLACE p WHERE :user in elements(p.users) ", Long.class)
+                .setParameter("user", user)
+                .getSingleResult().intValue();
     }
 
     @Transactional

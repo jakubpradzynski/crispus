@@ -19,7 +19,7 @@ public class Place {
 
     @NotNull(message = "Opis miejsca nie może być pusta")
     @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków")
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique=true)
     private String description;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

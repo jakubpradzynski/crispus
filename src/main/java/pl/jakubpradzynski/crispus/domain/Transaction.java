@@ -16,7 +16,8 @@ public class Transaction {
     @Column(name = "ID")
     private Integer id;
 
-    @Size(max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków")
+    @NotNull
+    @Size(min = 1, max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków")
     @Column(name = "DESCRIPTION")
     private String description;
 
@@ -34,6 +35,7 @@ public class Transaction {
     @Column(name = "VALUE")
     private Double value;
 
+    @NotNull
     @Column(name = "DATE")
     private Date date;
 
@@ -48,7 +50,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(@Size(max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") String description, @NotNull User user, @NotNull Account account, @NotNull Double value, Date date, Place place, TransactionCategory transactionCategory) {
+    public Transaction(@Size(max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") String description, @NotNull User user, @NotNull Account account, @NotNull Double value, @NotNull Date date, Place place, TransactionCategory transactionCategory) {
         this.description = description;
         this.user = user;
         this.account = account;

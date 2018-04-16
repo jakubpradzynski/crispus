@@ -18,7 +18,7 @@ public class UserType {
 
     @NotNull(message = "Nazwa typu użytkownika nie może być pusta")
     @Size(max = 20, message = "Nazwa typu użytkownika nie może mieć więcej niż 20 znaków")
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique=true)
     private String name;
 
     @NotNull(message = "Limit kont nie może być pusty")

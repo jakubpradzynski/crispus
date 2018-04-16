@@ -1,18 +1,21 @@
-package pl.jakubpradzynski.crispus.api.dto;
+package pl.jakubpradzynski.crispus.dto;
 
 import pl.jakubpradzynski.crispus.validators.password.matches.MatchesPassword;
 import pl.jakubpradzynski.crispus.validators.phone.number.PhoneCase;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @MatchesPassword
 public class UserDto {
 
-    @NotNull
+    @NotNull(message = "Imie nie może być puste")
+    @Size(min = 3, max = 20, message = "Imie musi mieć od 3 do 20 znaków")
     private String name;
 
-    @NotNull
+    @NotNull(message = "Nazwisko nie może być puste")
+    @Size(min = 3, max = 30, message = "Nazwisko musi mieć od 3 do 30 znaków")
     private String surname;
 
     @NotNull
@@ -23,12 +26,22 @@ public class UserDto {
 
     @NotNull
     @Email
+    @Size(max = 50, message = "EmailValidator musi mieć maksymalnie 50 znaków")
     private String email;
 
     @PhoneCase
     private String phoneNumber;
 
     public UserDto() {}
+
+    public UserDto(@NotNull(message = "Imie nie może być puste") @Size(min = 3, max = 20, message = "Imie musi mieć od 3 do 20 znaków") String name, @NotNull(message = "Nazwisko nie może być puste") @Size(min = 3, max = 30, message = "Nazwisko musi mieć od 3 do 30 znaków") String surname, @NotNull String password, @NotNull String matchingPassword, @NotNull @Email @Size(max = 50, message = "EmailValidator musi mieć maksymalnie 50 znaków") String email, String phoneNumber) {
+        this.name = name;
+        this.surname = surname;
+        this.password = password;
+        this.matchingPassword = matchingPassword;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
 
     private UserDto(UserDtoBuilder builder) {
         this.name = builder.name;

@@ -1,6 +1,6 @@
 package pl.jakubpradzynski.crispus.validators.password.matches;
 
-import pl.jakubpradzynski.crispus.api.dto.UserDto;
+import pl.jakubpradzynski.crispus.dto.UserDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

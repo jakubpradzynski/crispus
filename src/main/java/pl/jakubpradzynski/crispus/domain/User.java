@@ -1,14 +1,11 @@
 package pl.jakubpradzynski.crispus.domain;
 
-import pl.jakubpradzynski.crispus.api.dto.UserDto;
 import pl.jakubpradzynski.crispus.validators.phone.number.PhoneCase;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 
 @Entity(name = "USER")
@@ -24,7 +21,7 @@ public class User {
     @NotNull
     @Email
     @Size(max = 50, message = "EmailValidator musi mieć maksymalnie 50 znaków")
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", unique=true)
     private String email;
 
     @NotNull

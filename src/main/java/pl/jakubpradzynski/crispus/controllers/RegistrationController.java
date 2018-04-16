@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
-import pl.jakubpradzynski.crispus.api.dto.UserDto;
+import pl.jakubpradzynski.crispus.dto.UserDto;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.exceptions.EmailExistsException;
 import pl.jakubpradzynski.crispus.services.UserService;
@@ -45,7 +45,7 @@ public class RegistrationController {
             return new ModelAndView("registration", "user", accountDto);
         }
         else {
-            return new ModelAndView("successRegister", "user", accountDto);
+            return new ModelAndView("successRegister");
         }
     }
 

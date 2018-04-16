@@ -42,6 +42,18 @@ public class AccountRepository {
                 .getResultList();
     }
 
+    public Collection<String> getAllUserAccountsNames(User user) {
+        return entityManager.createQuery("SELECT a.name FROM ACCOUNT a WHERE a.user=:user", String.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
+
+    public Integer getUserUsedAccountsNumber(User user) {
+        return entityManager.createQuery("SELECT COUNT(a) FROM ACCOUNT a WHERE a.user=:user", Long.class)
+                .setParameter("user", user)
+                .getSingleResult().intValue();
+    }
+
     @Transactional
     public void updateAccount(User user) {
         entityManager.merge(user);

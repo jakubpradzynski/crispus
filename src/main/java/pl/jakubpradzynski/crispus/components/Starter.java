@@ -5,8 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import pl.jakubpradzynski.crispus.api.dto.UserDto;
-import pl.jakubpradzynski.crispus.domain.User;
+import pl.jakubpradzynski.crispus.dto.UserDto;
 import pl.jakubpradzynski.crispus.exceptions.EmailExistsException;
 import pl.jakubpradzynski.crispus.repositories.PlaceRepository;
 import pl.jakubpradzynski.crispus.repositories.TransactionCategoryRepository;
@@ -14,7 +13,6 @@ import pl.jakubpradzynski.crispus.repositories.UserRepository;
 import pl.jakubpradzynski.crispus.repositories.UserTypeRepository;
 import pl.jakubpradzynski.crispus.services.UserService;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 @Component

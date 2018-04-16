@@ -19,7 +19,7 @@ public class TransactionCategory {
 
     @NotNull(message = "Nazwa kategorii transakcji nie może być pusta")
     @Size(min = 3, max = 50, message = "Nazwa kategorii transakcji musi mieć od 3 do 50 znaków")
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique=true)
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

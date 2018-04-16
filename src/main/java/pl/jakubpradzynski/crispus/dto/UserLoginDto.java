@@ -1,4 +1,4 @@
-package pl.jakubpradzynski.crispus.api.dto;
+package pl.jakubpradzynski.crispus.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

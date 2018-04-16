@@ -1,10 +1,9 @@
 package pl.jakubpradzynski.crispus.services;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.jakubpradzynski.crispus.api.dto.UserDto;
-import pl.jakubpradzynski.crispus.api.dto.UserLoginDto;
+import pl.jakubpradzynski.crispus.dto.UserDto;
+import pl.jakubpradzynski.crispus.dto.UserLoginDto;
 import pl.jakubpradzynski.crispus.domain.Place;
 import pl.jakubpradzynski.crispus.domain.TransactionCategory;
 import pl.jakubpradzynski.crispus.domain.User;
@@ -14,9 +13,6 @@ import pl.jakubpradzynski.crispus.repositories.*;
 import pl.jakubpradzynski.crispus.utils.HashUtils;
 
 import javax.transaction.Transactional;
-import java.security.SecureRandom;
-import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 

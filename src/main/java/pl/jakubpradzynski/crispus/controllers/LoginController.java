@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
-import pl.jakubpradzynski.crispus.api.dto.UserDto;
-import pl.jakubpradzynski.crispus.api.dto.UserLoginDto;
-import pl.jakubpradzynski.crispus.domain.User;
+import pl.jakubpradzynski.crispus.dto.UserLoginDto;
 import pl.jakubpradzynski.crispus.services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -36,15 +34,15 @@ public class LoginController {
             (@ModelAttribute("user") @Valid UserLoginDto userLoginDto,
              BindingResult result, WebRequest request, Errors errors, HttpSession httpSession) {
         if (result.hasErrors()) {
-            return new ModelAndView("login.html", "user", userLoginDto);
+            return new ModelAndView("/login", "user", userLoginDto);
         }
         if (userService.loginCheck(userLoginDto)) {
             httpSession.setAttribute("username", userLoginDto.getLogin());
-            return new ModelAndView("homepage.html", "user", userLoginDto);
+            return new ModelAndView("redirect:/homepage", "user", userLoginDto);
         } else {
             result.rejectValue("password", "invalid.login.or.password");
         }
-        return new ModelAndView("login.html", "user", userLoginDto);
+        return new ModelAndView("/login", "user", userLoginDto);
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)

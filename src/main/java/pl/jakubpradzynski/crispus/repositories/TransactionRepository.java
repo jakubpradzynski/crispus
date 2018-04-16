@@ -2,12 +2,15 @@ package pl.jakubpradzynski.crispus.repositories;
 
 import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.*;
+import pl.jakubpradzynski.crispus.dto.TransactionDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public class TransactionRepository {
@@ -41,6 +44,16 @@ public class TransactionRepository {
         return entityManager.createQuery("SELECT t FROM TRANSACTION t WHERE t.user=:user", Transaction.class)
                 .setParameter("user", user)
                 .getResultList();
+    }
+    public Collection<TransactionDto> getLastTwentyUserTransactionsDto(User user) {
+        List<Transaction> lastTwentyUserTransactions = entityManager.createQuery("SELECT t FROM TRANSACTION t WHERE t.user=:user ORDER BY t.date DESC", Transaction.class)
+                .setParameter("user", user)
+                .setMaxResults(20)
+                .getResultList();
+        List<TransactionDto> lastTwentyUserTransactionsDto = new ArrayList<>();
+        for (Transaction transaction : lastTwentyUserTransactions)
+            lastTwentyUserTransactionsDto.add(TransactionDto.fromTransaction(transaction));
+        return lastTwentyUserTransactionsDto;
     }
 
     @Transactional
