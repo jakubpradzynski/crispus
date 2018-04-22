@@ -1,11 +1,4 @@
 $(document).ready( function() {
-    // $(window).scroll(function() {
-    //     if ($(this).scrollTop() > 50) {
-    //         $('#menu').css({
-    //             'display': 'none'
-    //         });
-    //     }
-    // });
     $(function () {
         $(window).scroll(function () {
             var scroll = $(window).scrollTop();

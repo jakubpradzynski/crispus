@@ -30,6 +30,7 @@ public class AccountRepository {
     }
 
     public Account getUserAccountByName(User user, String name) {
+        System.out.println("jestem tu 4");
         return entityManager.createQuery("SELECT a FROM ACCOUNT a WHERE a.user=:user AND a.name=:name", Account.class)
                 .setParameter("user", user)
                 .setParameter("name", name)

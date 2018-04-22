@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 
 public class TransactionDto {
 
+    private Integer id;
+
     @NotNull
     @Size(min = 1, max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków")
     private String description;
@@ -34,6 +36,7 @@ public class TransactionDto {
     public static TransactionDto fromTransaction(Transaction transaction) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         TransactionDto transactionDto = new TransactionDto();
+        transactionDto.id = transaction.getId();
         transactionDto.description = transaction.getDescription();
         transactionDto.username = transaction.getUser().getEmail();
         transactionDto.accountName = transaction.getAccount().getName();
@@ -51,7 +54,8 @@ public class TransactionDto {
         this.username = username;
     }
 
-    public TransactionDto(@NotNull @Size(max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") String description, @NotNull @Email String username, @NotNull(message = "Nazwa konta nie może być pusta") @Size(min = 3, max = 30, message = "Nazwa konta musi mieć od 3 do 30 znaków") String accountName, @NotNull Double value, @NotNull String date, String placeDescription, String transactionCategoryName) {
+    public TransactionDto(@NotNull @Size(min = 1, max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") Integer id, @NotNull @Size(min = 1, max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") String description, @NotNull @Email String username, @NotNull(message = "Nazwa konta nie może być pusta") @Size(min = 3, max = 30, message = "Nazwa konta musi mieć od 3 do 30 znaków") String accountName, @NotNull Double value, @NotNull String date, String placeDescription, String transactionCategoryName) {
+        this.id = id;
         this.description = description;
         this.username = username;
         this.accountName = accountName;
@@ -59,6 +63,14 @@ public class TransactionDto {
         this.date = date;
         this.placeDescription = placeDescription;
         this.transactionCategoryName = transactionCategoryName;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -120,7 +132,8 @@ public class TransactionDto {
     @Override
     public String toString() {
         return "TransactionDto{" +
-                "description='" + description + '\'' +
+                "id=" + id +
+                ", description='" + description + '\'' +
                 ", username='" + username + '\'' +
                 ", accountName='" + accountName + '\'' +
                 ", value=" + value +

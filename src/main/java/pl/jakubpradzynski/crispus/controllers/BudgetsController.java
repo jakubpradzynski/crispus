@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
+import pl.jakubpradzynski.crispus.utils.SessionUtils;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,9 +13,7 @@ public class BudgetsController {
 
     @RequestMapping(value = "/budgets", method = RequestMethod.GET)
     public String showBudgets(HttpSession httpSession) throws SessionExpiredException {
-        if (httpSession.getAttribute("username") == null) {
-            throw new SessionExpiredException("Sesja wygasła!");
-        }
+        SessionUtils.isUserSessionActive(httpSession);
         return "budgets.html";
     }
 

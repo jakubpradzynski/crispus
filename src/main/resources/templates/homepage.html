@@ -70,13 +70,13 @@
                 <div class="form-group row">
                     <div class="col-sm-6">
                         <select class="custom-select mr-sm-2" th:field="*{placeDescription}" >
-                            <option value="" selected>Wybierz miejsce (opcjonalnie)</option>
+                            <option th:value="${null}" selected>Wybierz miejsce (opcjonalnie)</option>
                             <option th:each="place : ${placesDescriptions}" th:value="${place}" th:text="${place}"></option>
                         </select>
                     </div>
                     <div class="col-sm-6">
                         <select class="custom-select mr-sm-2" th:field="*{transactionCategoryName}" >
-                            <option value="" selected>Wybierz kategorie transakcji (opcjonalnie)</option>
+                            <option th:value="${null}" selected>Wybierz kategorie transakcji (opcjonalnie)</option>
                             <option th:each="transactionCategory : ${transactionCategoriesNames}" th:value="${transactionCategory}" th:text="${transactionCategory}"></option>
                         </select>
                     </div>
@@ -104,10 +104,11 @@
             </div>
             <div class="col-1  border-right border-dark"></div>
             <div class="col-6">
-                <h2 class="text-center">Ostatnie <p th:text="${#lists.size(lastTwentyTransactionsDto)}" th:remove="tag"></p> transakcji:</h2><br>
+                <h2 class="text-center">Ostatnie <p th:text="${#lists.size(lastTenTransactionsDto)}" th:remove="tag"></p> transakcji:</h2><br>
                 <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action list-group-item-light " th:each="transaction : ${lastTwentyTransactionsDto}">
-                        <p th:text="${transaction.date + ' - ' + transaction.description + ' - ' + transaction.value + 'zł'}" th:remove="tag"></p>
+                    <a class="list-group-item list-group-item-action list-group-item-light" th:each="transaction : ${lastTenTransactionsDto}" th:href="@{'/transaction?id=' + ${transaction.id}}">
+                        <p th:text="${transaction.date + ' | ' + transaction.description + ' | ' + transaction.value + 'zł'}" th:remove="tag">
+                        </p>
                     </a>
                 </div>
             </div>

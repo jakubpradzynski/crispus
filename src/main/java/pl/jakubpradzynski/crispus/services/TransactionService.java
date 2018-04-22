@@ -6,6 +6,7 @@ import pl.jakubpradzynski.crispus.dto.TransactionDto;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.repositories.*;
 
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,4 +43,12 @@ public class TransactionService {
         );
     }
 
+    public TransactionDto getTransactionDtoById(Integer id) {
+        return TransactionDto.fromTransaction(transactionRepository.getTransactionById(id));
+    }
+
+    public void editTransactionById(Integer id, TransactionDto transactionDto) throws ParseException {
+        System.out.println("jestem tu 2");
+        transactionRepository.updateTransaction(id, transactionDto);
+    }
 }

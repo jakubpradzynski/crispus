@@ -16,9 +16,13 @@ import pl.jakubpradzynski.crispus.dto.TransactionDto;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
 import pl.jakubpradzynski.crispus.services.DataService;
 import pl.jakubpradzynski.crispus.services.TransactionService;
+import pl.jakubpradzynski.crispus.utils.SessionUtils;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import java.util.Collections;
+import java.util.List;
 
 import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
 
@@ -27,22 +31,20 @@ import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
 public class HomepageController {
 
     @Autowired
-    DataService dataService;
+    private DataService dataService;
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
     @Autowired
-    HttpSession httpSession;
+    private HttpSession httpSession;
 
     @Autowired
     private Environment environment;
 
     @RequestMapping(value = "/homepage", method = RequestMethod.GET)
     public String showHomepage(Model model) throws SessionExpiredException {
-        if (httpSession.getAttribute("username") == null) {
-            throw new SessionExpiredException("Sesja wygasła!");
-        }
+        SessionUtils.isUserSessionActive(httpSession);
         addAttributesToModel(model);
         return "homepage.html";
     }
@@ -67,12 +69,18 @@ public class HomepageController {
     }
 
     private void addAttributesToModel(Model model) {
+        List<String> accountNames = dataService.getUserAccountsNames((String) httpSession.getAttribute("username"));
+        Collections.sort(accountNames, String.CASE_INSENSITIVE_ORDER);
+        List<String> placesDescriptions = dataService.getPlacesDescriptionsAvailableForUser((String) httpSession.getAttribute("username"));
+        Collections.sort(placesDescriptions, String.CASE_INSENSITIVE_ORDER);
+        List<String> transactionCategoriesNames = dataService.getTransactionCategoriesNamesAvailableForUser((String) httpSession.getAttribute("username"));
+        Collections.sort(transactionCategoriesNames, String.CASE_INSENSITIVE_ORDER);
         model.addAttribute("userPublicData", dataService.getPublicUserData((String) httpSession.getAttribute("username")));
-        model.addAttribute("lastTwentyTransactionsDto", dataService.getUserLastTwentyTransactionsDto((String) httpSession.getAttribute("username")));
+        model.addAttribute("lastTenTransactionsDto", dataService.getUserLastTenTransactionsDto((String) httpSession.getAttribute("username")));
         model.addAttribute("newTransactionDto", new TransactionDto((String) httpSession.getAttribute("username")));
-        model.addAttribute("userAccountsNames", dataService.getUserAccountsNames((String) httpSession.getAttribute("username")));
-        model.addAttribute("placesDescriptions", dataService.getPlacesDescriptionsAvailableForUser((String) httpSession.getAttribute("username")));
-        model.addAttribute("transactionCategoriesNames", dataService.getTransactionCategoriesNamesAvailableForUser((String) httpSession.getAttribute("username")));
+        model.addAttribute("userAccountsNames", accountNames);
+        model.addAttribute("placesDescriptions", placesDescriptions);
+        model.addAttribute("transactionCategoriesNames", transactionCategoriesNames);
     }
 
     private void addErrorsAttributesToModel(Errors errors, Model model) {

@@ -8,10 +8,7 @@ import pl.jakubpradzynski.crispus.domain.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -39,6 +36,20 @@ public class PlaceRepository {
         return entityManager.createQuery("SELECT p FROM PLACE p WHERE p.description=:description", Place.class)
                 .setParameter("description", description)
                 .getSingleResult();
+    }
+
+    public Place getPlaceAvailableForUserByDescription(User user, String description) {
+        System.out.println("jestem tu 5");
+        Collection<Place> places = getAllPreDefinedPlaces();
+        System.out.println("jestem tu 5");
+        List<Place> filterPlaces =  places.stream().filter(place -> place.getDescription().equals(description)).collect(Collectors.toList());
+        if (!filterPlaces.isEmpty()) return filterPlaces.get(0);
+        System.out.println("jestem tu 5");
+        return entityManager.createQuery("SELECT p FROM PLACE p WHERE p.description=:description AND p.user=:user", Place.class)
+                .setParameter("description", description)
+                .setParameter("user", user)
+                .getSingleResult();
+
     }
 
     public Collection<Place> getAllPlaces() {

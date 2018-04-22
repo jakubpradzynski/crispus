@@ -41,6 +41,26 @@ public class TransactionCategoryRepository {
                 .getSingleResult();
     }
 
+
+    public TransactionCategory getUserTransactionCategoryByName(User user, String name) {
+        return entityManager.createQuery("SELECT tc FROM TRANSACTION_CATEGORY tc WHERE tc.name=:name AND user=:user", TransactionCategory.class)
+                .setParameter("name", name)
+                .setParameter("user", user)
+                .getSingleResult();
+    }
+
+    public TransactionCategory getTransactionCategoryAvailableForUserByName(User user, String name) {
+        List<TransactionCategory> transactionCategories = (List<TransactionCategory>) getAllPreDefinedTransactionCategories();
+        List<TransactionCategory> filterTransactionCategories = transactionCategories.stream().filter(transactionCategory -> transactionCategory.getName().equals(name)).collect(Collectors.toList());
+
+        if (!filterTransactionCategories.isEmpty()) return filterTransactionCategories.get(0);
+        System.out.println("jestem tu 6");
+        return entityManager.createQuery("SELECT tc FROM TRANSACTION_CATEGORY tc WHERE tc.name=:name AND user=:user", TransactionCategory.class)
+                .setParameter("name", name)
+                .setParameter("user", user)
+                .getSingleResult();
+    }
+
     public Collection<TransactionCategory> getAllTransactionCategories() {
         return entityManager.createQuery("SELECT tc FROM TRANSACTION_CATEGORY tc ", TransactionCategory.class)
                 .getResultList();

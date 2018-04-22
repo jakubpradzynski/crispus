@@ -38,10 +38,10 @@ public class DataService {
         return publicUserData;
     }
 
-    public List<TransactionDto> getUserLastTwentyTransactionsDto(String username) {
+    public List<TransactionDto> getUserLastTenTransactionsDto(String username) {
         User user = userRepository.getUserByEmail(username);
-        List<TransactionDto> userLastTwentyTransactionsDto = (List<TransactionDto>) transactionRepository.getLastTwentyUserTransactionsDto(user);
-        return userLastTwentyTransactionsDto;
+        List<TransactionDto> userLastTenTransactionsDto = (List<TransactionDto>) transactionRepository.getLastTenUserTransactionsDto(user);
+        return userLastTenTransactionsDto;
     }
 
     public List<String> getUserAccountsNames(String username) {
