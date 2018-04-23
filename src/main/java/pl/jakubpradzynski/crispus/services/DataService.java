@@ -29,9 +29,12 @@ public class DataService {
     @Autowired
     TransactionRepository transactionRepository;
 
+    @Autowired
+    AccountService accountService;
+
     public PublicUserData getPublicUserData(String username) {
         User user = userRepository.getUserByEmail(username);
-        Integer usedAccounts = accountRepository.getUserUsedAccountsNumber(user);
+        Integer usedAccounts = accountService.getUserUsedAccountsNumber(username);
         Integer usedPlaces = placeRepository.getUserUsedPlacesNumber(user);
         Integer usedTransactionCategories = transactionCategoryRepository.getUserUsedTransactionCategoriesNumber(user);
         PublicUserData publicUserData = new PublicUserData(user.getName(), user.getSurname(), user.getEmail(), user.getPhoneNumber(), user.getUserType(), usedAccounts, usedPlaces, usedTransactionCategories);

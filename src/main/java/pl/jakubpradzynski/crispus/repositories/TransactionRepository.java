@@ -36,11 +36,13 @@ public class TransactionRepository {
     @Transactional
     public void createTransaction(String description, User user, Account account, Double value, Date date, Place place, TransactionCategory transactionCategory) {
         Transaction transaction = new Transaction(description, user, account, value, date, place, transactionCategory);
+        accountRepository.updateAccountAfterTransaction(account, value);
         entityManager.persist(transaction);
     }
 
     @Transactional
     public void createTransaction(Transaction transaction) {
+        accountRepository.updateAccountAfterTransaction(transaction.getAccount(), transaction.getValue());
         entityManager.persist(transaction);
     }
 
@@ -71,6 +73,18 @@ public class TransactionRepository {
         return lastTenUserTransactionsDto;
     }
 
+    public Double getTransactionExpensesAmountForAccount(Account account) {
+        return entityManager.createQuery("SELECT SUM(t.value) FROM TRANSACTION t WHERE t.account=:account AND t.value < 0", Double.class)
+                .setParameter("account", account)
+                .getSingleResult();
+    }
+
+    public Double getTransactionRevenuesAmountForAccount(Account account) {
+        return entityManager.createQuery("SELECT SUM(t.value) FROM TRANSACTION t WHERE t.account=:account AND t.value >= 0", Double.class)
+                .setParameter("account", account)
+                .getSingleResult();
+    }
+
     @Transactional
     public void updateTransaction(Transaction transaction) {
         entityManager.merge(transaction);
@@ -80,7 +94,6 @@ public class TransactionRepository {
     public void updateTransaction(Integer id, TransactionDto transactionDto) throws ParseException {
         User user = userRepository.getUserByEmail(transactionDto.getUsername());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        System.out.println("jestem tu 3");
         entityManager.createQuery("UPDATE TRANSACTION t SET t.description=:description, t.account=:account, t.value=:val, t.date=:date, t.place=:place, t.transactionCategory=:category WHERE t.id=:id")
                 .setParameter("description", transactionDto.getDescription())
                 .setParameter("account", accountRepository.getUserAccountByName(user, transactionDto.getAccountName()))
@@ -90,7 +103,6 @@ public class TransactionRepository {
                 .setParameter("category", !transactionDto.getTransactionCategoryName().equals("") ? transactionCategoryRepository.getTransactionCategoryByName(transactionDto.getTransactionCategoryName()) : null)
                 .setParameter("id", id)
                 .executeUpdate();
-        System.out.println("jestem tu 7");
     }
 
     @Transactional

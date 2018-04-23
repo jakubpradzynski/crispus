@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
+import pl.jakubpradzynski.crispus.dto.TransactionListingDto;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
 import pl.jakubpradzynski.crispus.services.DataService;
 import pl.jakubpradzynski.crispus.services.TransactionService;
@@ -39,7 +40,7 @@ public class TransactionsController {
     private DataService dataService;
 
     @RequestMapping(value = "/transactions", method = RequestMethod.GET)
-    public String showTransactions() throws SessionExpiredException {
+    public String showTransactions(Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
         return "transactions";
     }
@@ -70,9 +71,7 @@ public class TransactionsController {
             addAttributesToModel(model);
             return new ModelAndView("redirect:/transaction/edit/" + transactionDto.getId(), "model", model);
         }
-        System.out.println("jestem tu 1");
         transactionService.editTransactionById(transactionDto.getId(), transactionDto);
-        System.out.println("jestem tu 8");
         return new ModelAndView("redirect:/transaction?id=" + transactionDto.getId());
     }
 

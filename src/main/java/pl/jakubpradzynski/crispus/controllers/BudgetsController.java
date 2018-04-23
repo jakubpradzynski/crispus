@@ -14,7 +14,7 @@ public class BudgetsController {
     @RequestMapping(value = "/budgets", method = RequestMethod.GET)
     public String showBudgets(HttpSession httpSession) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
-        return "budgets.html";
+        return "budgets";
     }
 
 }

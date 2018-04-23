@@ -20,8 +20,7 @@
 
     <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/time.js}"></script>
-    <script th:src="@{/js/menuHide.js}"></script>
+    <script th:src="@{/js/global.js}"></script>
 </head>
 <body>
 <nav id="menu" class="navbar fixed-top navbar-light rounded-bottom border-bottom border-dark font-weight-bold">
@@ -29,7 +28,9 @@
     <a class="nav-link " th:href="@{/homepage}">Strona główna</a>
     <a class="nav-link" th:href="@{/accounts}">Konta</a>
     <a class="nav-link" th:href="@{/budgets}">Budżety</a>
-    <a class="nav-link" th:href="@{/transcations}">Transakcje</a>
+    <a class="nav-link" th:href="@{/transactions}">Transakcje</a>
+    <a class="nav-link" th:href="@{/places}">Miejsca</a>
+    <a class="nav-link" th:href="@{/categories}">Kategorie</a>
     <span>
         <a class="navbar-text text-dark"
            th:text="${session.username != null} ? ${session.username} : 'Nie jesteś zalogowany'"></a>
@@ -43,6 +44,10 @@
 </nav>
 <div class="container">
     <div class="login-panel border border-dark rounded px-5 py-5">
+        <h2 class="text-center">Edytuj transakcje:</h2>
+        <br>
+        <hr>
+        <br>
         <form th:object="${transaction}" th:action="@{/transaction/edit}" method="POST" enctype="utf8">
             <input th:field="*{id}" th:value="${param.id}" th:hidden="true">
             <div class="row">
@@ -81,6 +86,9 @@
                 </div>
                 <input th:field="*{username}" th:value="${session.username}" th:hidden="true"/>
             </div>
+            <br>
+            <hr>
+            <br>
             <div class="form-group row">
                 <div class="col-sm-12 text-center">
                     <button type="submit" class="btn btn-success">Zapisz zmiany</button>

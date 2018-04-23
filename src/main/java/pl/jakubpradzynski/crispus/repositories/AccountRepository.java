@@ -2,6 +2,7 @@ package pl.jakubpradzynski.crispus.repositories;
 
 import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.*;
+import pl.jakubpradzynski.crispus.dto.ChangeAccountNameDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,7 +31,6 @@ public class AccountRepository {
     }
 
     public Account getUserAccountByName(User user, String name) {
-        System.out.println("jestem tu 4");
         return entityManager.createQuery("SELECT a FROM ACCOUNT a WHERE a.user=:user AND a.name=:name", Account.class)
                 .setParameter("user", user)
                 .setParameter("name", name)
@@ -55,6 +55,21 @@ public class AccountRepository {
                 .getSingleResult().intValue();
     }
 
+    public Integer getUserAccountIdByName(User user, String accountName) {
+        return entityManager.createQuery("SELECT a.id FROM ACCOUNT a WHERE a.user=:user AND a.name=:name")
+                .setParameter("user", user)
+                .setParameter("name", accountName)
+                .getFirstResult();
+    }
+
+    @Transactional
+    public void updateAccountAfterTransaction(Account account, Double value) {
+        entityManager.createQuery("UPDATE ACCOUNT a SET a.moneyAmount=:val WHERE a.id=:id")
+                .setParameter("val", value + account.getMoneyAmount())
+                .setParameter("id", account.getId())
+                .executeUpdate();
+    }
+
     @Transactional
     public void updateAccount(User user) {
         entityManager.merge(user);
@@ -63,5 +78,14 @@ public class AccountRepository {
     @Transactional
     public void deleteAccount(Integer id) {
         entityManager.remove(id);
+    }
+
+    @Transactional
+    public void changeUserAccountByName(User user, ChangeAccountNameDto changeAccountNameDto) {
+        entityManager.createQuery("UPDATE ACCOUNT a SET a.name=:newName WHERE a.name=:oldName AND a.user=:user")
+                .setParameter("newName", changeAccountNameDto.getNewName())
+                .setParameter("oldName", changeAccountNameDto.getOldName())
+                .setParameter("user", user)
+                .executeUpdate();
     }
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl" th:lang="pl" xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml"
+      xmlns:context="http://www.springframework.org/schema/context"
+      xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+<head>
+    <title>Transakcje</title>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8"/>
+
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}"/>
+
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/global.js}"></script>
+</head>
+<body>
+<nav id="menu" class="navbar fixed-top navbar-lFight rounded-bottom border-bottom border-dark font-weight-bold">
+    <a class="navbar-brand text-dark">Menu</a>
+    <a class="nav-link" th:href="@{/homepage}">Strona główna</a>
+    <a class="nav-link" th:href="@{/accounts}">Konta</a>
+    <a class="nav-link" th:href="@{/budgets}">Budżety</a>
+    <a class="nav-link" th:href="@{/transactions}">Transakcje</a>
+    <a class="nav-link" th:href="@{/places}">Miejsca</a>
+    <a class="nav-link" th:href="@{/categories}">Kategorie</a>
+    <span>
+        <a class="navbar-text text-dark"
+           th:text="${session.username != null} ? ${session.username} : 'Nie jesteś zalogowany'"></a>
+        <a th:if="${session.username == null}" th:href="@{/login}"><button
+                class="btn btn-outline-dark my-2 my-sm-0" type="submit">Logowanie</button></a>
+        <a th:if="${session.username == null}" th:href="@{/registration}"><button
+                class="btn btn-outline-dark my-2 my-sm-0" type="submit">Rejestracja</button></a>
+        <a th:if="${session.username != null}" th:href="@{/logout}"><button class="btn btn-outline-dark my-2 my-sm-0"
+                                                                            type="submit">Wyloguj sie</button></a>
+    </span>
+</nav>
+<div class="container">
+    <div class="login-panel border border-dark rounded px-5 py-5">
+
+    </div>
+</div>
+</body>
+</html>

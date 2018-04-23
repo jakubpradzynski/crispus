@@ -48,7 +48,6 @@ public class TransactionService {
     }
 
     public void editTransactionById(Integer id, TransactionDto transactionDto) throws ParseException {
-        System.out.println("jestem tu 2");
         transactionRepository.updateTransaction(id, transactionDto);
     }
 }

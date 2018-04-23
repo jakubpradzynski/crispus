@@ -1,6 +1,7 @@
 package pl.jakubpradzynski.crispus.repositories;
 
 import org.springframework.stereotype.Repository;
+import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.domain.UserType;
 
 import javax.persistence.EntityManager;
@@ -35,6 +36,11 @@ public class UserTypeRepository {
                 .getSingleResult();
     }
 
+    public Integer getAccountNumberAvailableForUser(User user) {
+        return entityManager.createQuery("SELECT ut.accountLimit FROM USER_TYPE ut WHERE ut.id=:id", Integer.class)
+                .setParameter("id", user.getUserType().getId())
+                .getSingleResult();
+    }
 
     public Collection<UserType> getAllUserTypes() {
         return entityManager.createQuery("SELECT ut FROM USER_TYPE ut", UserType.class)
@@ -50,4 +56,5 @@ public class UserTypeRepository {
     public void deleteUserType(Integer id) {
         entityManager.remove(id);
     }
+
 }

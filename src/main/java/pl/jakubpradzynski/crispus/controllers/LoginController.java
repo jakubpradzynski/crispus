@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import pl.jakubpradzynski.crispus.dto.UserLoginDto;
+import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
 import pl.jakubpradzynski.crispus.services.UserService;
+import pl.jakubpradzynski.crispus.utils.SessionUtils;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -22,11 +24,17 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private HttpSession httpSession;
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String showLoginForm(WebRequest request, Model model) {
+        if (httpSession.getAttribute("username") != null) {
+            return "redirect:/homepage";
+        }
         UserLoginDto userLoginDto = new UserLoginDto();
         model.addAttribute("user", userLoginDto);
-        return "login.html";
+        return "login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -48,7 +56,7 @@ public class LoginController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(WebRequest request, Model model, HttpSession httpSession) {
         httpSession.removeAttribute("username");
-        return "succesLogout.html";
+        return "succesLogout";
     }
 
 }

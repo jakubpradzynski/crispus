@@ -21,6 +21,7 @@
 
     <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/global.js}"></script>
 </head>
 <body>
 <div class="container">
@@ -29,8 +30,8 @@
         <br>
         <h2 class="text-center text-danger font-weight-bold" th:text="${exception} == null ? 'Wystąpił jakiś błąd!' : ${exception.message}"><br>Wystąpił jakiś błąd!<br></h2>
         <br>
-        <h4 class="text-center">Za chwilę zostaniesz przekierowany na stronę logowania.<br>Jeżeli przekierowanie nie działa, kliknij <a
-                th:href="@{/login}">tutaj</a>.</h4>
+        <h4 class="text-center">Za chwilę zostaniesz przekierowany na stronę główną.<br>Jeżeli przekierowanie nie działa, kliknij <a
+                th:href="@{/}">tutaj</a>.</h4>
     </div>
 </div>
 </body>

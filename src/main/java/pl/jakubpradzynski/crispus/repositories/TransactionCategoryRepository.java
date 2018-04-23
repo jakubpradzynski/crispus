@@ -54,7 +54,6 @@ public class TransactionCategoryRepository {
         List<TransactionCategory> filterTransactionCategories = transactionCategories.stream().filter(transactionCategory -> transactionCategory.getName().equals(name)).collect(Collectors.toList());
 
         if (!filterTransactionCategories.isEmpty()) return filterTransactionCategories.get(0);
-        System.out.println("jestem tu 6");
         return entityManager.createQuery("SELECT tc FROM TRANSACTION_CATEGORY tc WHERE tc.name=:name AND user=:user", TransactionCategory.class)
                 .setParameter("name", name)
                 .setParameter("user", user)
