@@ -109,4 +109,28 @@ public class TransactionRepository {
     public void deleteTransaction(Integer id) {
         entityManager.remove(id);
     }
+
+    @Transactional
+    public void removeTransaction(Integer id) {
+        entityManager.createQuery("DELETE FROM TRANSACTION t WHERE t.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    public Collection<Transaction> getAllTransactionsAssignedToAccount(Account account) {
+        return entityManager.createQuery("SELECT t FROM TRANSACTION t WHERE t.account=:account", Transaction.class)
+                .setParameter("account", account)
+                .getResultList();
+    }
+
+    public List<TransactionDto> getUserTransactionByRange(User user, Integer start, Integer max) {
+        List<Transaction> transactions = entityManager.createQuery("SELECT t FROM TRANSACTION t WHERE t.user=:user ORDER BY t.date DESC", Transaction.class)
+                .setParameter("user", user)
+                .setFirstResult(start)
+                .setMaxResults(max)
+                .getResultList();
+        List<TransactionDto> transactionDtoList = new ArrayList<>();
+        transactions.forEach(transaction -> transactionDtoList.add(TransactionDto.fromTransaction(transaction)));
+        return transactionDtoList;
+    }
 }

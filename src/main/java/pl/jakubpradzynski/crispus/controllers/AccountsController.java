@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.jakubpradzynski.crispus.dto.AccountValuesDto;
 import pl.jakubpradzynski.crispus.dto.ChangeAccountNameDto;
 import pl.jakubpradzynski.crispus.dto.NewAccountDto;
+import pl.jakubpradzynski.crispus.dto.RemoveAccountDto;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
 import pl.jakubpradzynski.crispus.services.AccountService;
 import pl.jakubpradzynski.crispus.services.DataService;
@@ -44,6 +45,7 @@ public class AccountsController {
 
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
     public ModelAndView showAccounts(Model model) throws SessionExpiredException {
+        SessionUtils.isUserSessionActive(httpSession);
         addElementsToModel(model);
         return new ModelAndView("accounts", "model", model);
     }
@@ -70,13 +72,24 @@ public class AccountsController {
             return new ModelAndView("/accounts", "model", model);
         }
         newAccountDto.setUsername((String) httpSession.getAttribute("username"));
-        System.out.println(newAccountDto);
         accountService.addNewUserAccount(newAccountDto);
         return new ModelAndView("redirect:/accounts");
     }
 
-    private void addElementsToModel(Model model) {
+    @RequestMapping(value = "/account/remove", method = RequestMethod.POST)
+    public ModelAndView removeAccount(@ModelAttribute("removeAccountDto") @Valid RemoveAccountDto removeAccountDto, BindingResult result, Model model, Errors errors) {
         SessionUtils.isUserSessionActive(httpSession);
+        if (result.hasErrors()) {
+            addErrorsAttributesToModel(errors, model);
+            addElementsToModel(model);
+            return new ModelAndView("/accounts", "model", model);
+        }
+        removeAccountDto.setUsername((String) httpSession.getAttribute("username"));
+        accountService.removeUserAccount(removeAccountDto);
+        return new ModelAndView("redirect:/accounts");
+    }
+
+    private void addElementsToModel(Model model) {
         String username = (String) httpSession.getAttribute("username");
         List<String> accountsNames = dataService.getUserAccountsNames(username);
         Collections.sort(accountsNames, String.CASE_INSENSITIVE_ORDER);
@@ -86,6 +99,7 @@ public class AccountsController {
         model.addAttribute("accountsValues", accountValuesDtos);
         model.addAttribute("changeAccountNameDto", new ChangeAccountNameDto());
         model.addAttribute("newAccountDto", new NewAccountDto());
+        model.addAttribute("removeAccountDto", new RemoveAccountDto());
     }
 
     private void addErrorsAttributesToModel(Errors errors, Model model) {

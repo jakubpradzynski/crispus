@@ -61,6 +61,7 @@ public class Starter implements CommandLineRunner {
             e.printStackTrace();
         }
         User user = userRepository.getUserByEmail("jankowalski@gmail.com");
-        transactionRepository.createTransaction("Zakupy w biedronce", user, accountRepository.getUserAccountByName(user, "Konto podstawowe"), 123., new Date(), placeRepository.getPlaceByDescription("Biedronka"), transactionCategoryRepository.getTransactionCategoryByName("Ubrania"));
+        for (int i = 0; i < 40; i ++)
+            transactionRepository.createTransaction("Zakupy w biedronce " + i, user, accountRepository.getUserAccountByName(user, "Konto podstawowe"), 123., new Date(), placeRepository.getPlaceByDescription("Biedronka"), transactionCategoryRepository.getTransactionCategoryByName("Ubrania"));
     }
 }

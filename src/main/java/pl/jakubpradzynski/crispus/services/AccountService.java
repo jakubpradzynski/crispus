@@ -8,11 +8,13 @@ import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.dto.AccountValuesDto;
 import pl.jakubpradzynski.crispus.dto.ChangeAccountNameDto;
 import pl.jakubpradzynski.crispus.dto.NewAccountDto;
+import pl.jakubpradzynski.crispus.dto.RemoveAccountDto;
 import pl.jakubpradzynski.crispus.repositories.AccountRepository;
 import pl.jakubpradzynski.crispus.repositories.TransactionRepository;
 import pl.jakubpradzynski.crispus.repositories.UserRepository;
 import pl.jakubpradzynski.crispus.repositories.UserTypeRepository;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,13 +84,28 @@ public class AccountService {
         return userTypeRepository.getAccountNumberAvailableForUser(user);
     }
 
+    @Transactional
     public void changeUserAccountName(String username, ChangeAccountNameDto changeAccountNameDto) {
         User user = userRepository.getUserByEmail(username);
         accountRepository.changeUserAccountByName(user, changeAccountNameDto);
     }
 
+    @Transactional
     public void addNewUserAccount(NewAccountDto newAccountDto) {
         User user = userRepository.getUserByEmail(newAccountDto.getUsername());
         accountRepository.createAccount(user, newAccountDto.getName(), newAccountDto.getMoneyAmount());
+    }
+
+    @Transactional
+    public void removeUserAccount(RemoveAccountDto removeAccountDto) {
+        User user = userRepository.getUserByEmail(removeAccountDto.getUsername());
+        System.out.println(user);
+        Account account = accountRepository.getUserAccountByName(user, removeAccountDto.getName());
+        System.out.println(account);
+        List<Transaction> accountTransactions = (List<Transaction>) transactionRepository.getAllTransactionsAssignedToAccount(account);
+        System.out.println(accountTransactions);
+        accountTransactions.forEach(transaction -> transactionRepository.removeTransaction(transaction.getId()));
+        System.out.println(accountTransactions);
+        accountRepository.removeAccount(account.getId());
     }
 }

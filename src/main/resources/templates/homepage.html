@@ -28,7 +28,7 @@
     <a class="nav-link" th:href="@{/homepage}">Strona główna</a>
     <a class="nav-link" th:href="@{/accounts}">Konta</a>
     <a class="nav-link" th:href="@{/budgets}">Budżety</a>
-    <a class="nav-link" th:href="@{/transactions}">Transakcje</a>
+    <a class="nav-link" th:href="@{/transactions/1}">Transakcje</a>
     <a class="nav-link" th:href="@{/places}">Miejsca</a>
     <a class="nav-link" th:href="@{/categories}">Kategorie</a>
     <span>
@@ -45,7 +45,7 @@
 <div class="container">
     <div class="login-panel border border-dark rounded px-5 py-5">
         <div class="border-bottom border-dark">
-            <h2 class="text-center">Nowa transakcja</h2><br>
+            <h1 class="text-center">Nowa transakcja</h1><br>
             <form th:object="${newTransactionDto}" th:action="@{/homepage}" method="POST" enctype="utf8">
                 <div class="row">
                     <div class="col-sm-12">
@@ -107,7 +107,7 @@
             <div class="col-6">
                 <h2 class="text-center">Ostatnie <p th:text="${#lists.size(lastTenTransactionsDto)}" th:remove="tag"></p> transakcji:</h2><br>
                 <div class="list-group">
-                    <a class="list-group-item list-group-item-action list-group-item-light" th:each="transaction : ${lastTenTransactionsDto}" th:href="@{'/transaction?id=' + ${transaction.id}}">
+                    <a class="list-group-item list-group-item-action list-group-item-light text-center" th:each="transaction : ${lastTenTransactionsDto}" th:href="@{'/transaction?id=' + ${transaction.id}}">
                         <p th:text="${transaction.date + ' | ' + transaction.description + ' | ' + transaction.value + 'zł'}" th:remove="tag">
                         </p>
                     </a>

@@ -88,4 +88,10 @@ public class PlaceRepository {
     public void deletePlace(Integer id) {
         entityManager.remove(id);
     }
+
+    public Collection<Place> getPlaceCreatedByUser(User user) {
+        return entityManager.createQuery("SELECT p FROM PLACE p WHERE :user in elements(p.users)", Place.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
 }

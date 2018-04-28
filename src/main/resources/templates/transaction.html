@@ -28,7 +28,7 @@
     <a class="nav-link " th:href="@{/homepage}">Strona główna</a>
     <a class="nav-link" th:href="@{/accounts}">Konta</a>
     <a class="nav-link" th:href="@{/budgets}">Budżety</a>
-    <a class="nav-link" th:href="@{/transactions}">Transakcje</a>
+    <a class="nav-link" th:href="@{/transactions/1}">Transakcje</a>
     <a class="nav-link" th:href="@{/places}">Miejsca</a>
     <a class="nav-link" th:href="@{/categories}">Kategorie</a>
     <span>
@@ -64,7 +64,8 @@
         <hr>
         <br>
         <div class="row">
-            <div class="col-sm-12 text-center"><a th:href="@{'/transaction/edit/' + ${transaction.id}}"><button type="button" class="btn btn-success" th:text="Edytuj"></button></div></a>
+            <div class="col-sm-6 text-center"><a th:href="@{'/transaction/remove/' + ${transaction.id}}"><button type="button" class="btn btn-danger" th:text="Usuń"></button></a></div>
+            <div class="col-sm-6 text-center"><a th:href="@{'/transaction/edit/' + ${transaction.id}}"><button type="button" class="btn btn-success" th:text="Edytuj"></button></a></div>
         </div>
     </div>
 

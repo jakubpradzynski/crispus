@@ -57,4 +57,9 @@ public class UserTypeRepository {
         entityManager.remove(id);
     }
 
+    public Integer getPlaceNumberAvailableForUser(User user) {
+        return entityManager.createQuery("SELECT ut.placeLimit FROM USER_TYPE ut WHERE ut.id=:id", Integer.class)
+                .setParameter("id", user.getUserType().getId())
+                .getSingleResult();
+    }
 }

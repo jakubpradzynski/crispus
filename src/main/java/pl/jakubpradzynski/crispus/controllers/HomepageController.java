@@ -65,7 +65,6 @@ public class HomepageController {
             return new ModelAndView("homepage", "model", model);
         }
         return new ModelAndView("redirect:/homepage");
-
     }
 
     private void addAttributesToModel(Model model) {

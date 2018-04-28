@@ -9,6 +9,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+import pl.jakubpradzynski.crispus.domain.Transaction;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 import pl.jakubpradzynski.crispus.dto.TransactionListingDto;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
@@ -39,10 +40,13 @@ public class TransactionsController {
     @Autowired
     private DataService dataService;
 
-    @RequestMapping(value = "/transactions", method = RequestMethod.GET)
-    public String showTransactions(Model model) throws SessionExpiredException {
+    @RequestMapping(value = "/transactions/{id}", method = RequestMethod.GET)
+    public ModelAndView showTransactions(@PathVariable("id") Integer id, Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
-        return "transactions";
+        addAttributesToModel(model);
+        addAttributesToModel(id, model);
+        model.addAttribute("newTransactionDto", new TransactionDto((String) httpSession.getAttribute("username")));
+        return new ModelAndView("transactions", "model", model);
     }
 
     @RequestMapping(value = "/transaction", method = RequestMethod.GET)
@@ -50,6 +54,25 @@ public class TransactionsController {
         SessionUtils.isUserSessionActive(httpSession);
         TransactionDto transactionDto = transactionService.getTransactionDtoById(id);
         return new ModelAndView("transaction", "transaction", transactionDto);
+    }
+
+    @RequestMapping(value = "/transaction/add", method = RequestMethod.POST)
+    public ModelAndView addNewTransaction
+            (@ModelAttribute("newTransactionDto") @Valid TransactionDto transactionDto,
+             BindingResult result, WebRequest request, Errors errors, Model model) throws Exception {
+
+        if (!result.hasErrors()) {
+            transactionService.addNewUserTransaction(transactionDto);
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("newTransactionDto", transactionDto);
+            addAttributesToModel(model);
+            addAttributesToModel(1, model);
+            addErrorsAttributesToModel(errors, model);
+            return new ModelAndView("transactions", "model", model);
+        }
+        return new ModelAndView("redirect:/transactions/1");
     }
 
     @RequestMapping(value = "/transaction/edit/{id}", method = RequestMethod.GET)
@@ -61,11 +84,16 @@ public class TransactionsController {
         return new ModelAndView("transactionEdit", "model", model);
     }
 
+    @RequestMapping(value = "/transaction/remove/{id}", method = RequestMethod.GET)
+    public String removeTransaction(@PathVariable("id") Integer id) throws SessionExpiredException {
+        SessionUtils.isUserSessionActive(httpSession);
+        transactionService.removeTransactionById(id);
+        return "redirect:/homepage";
+    }
+
     @RequestMapping(value = "/transaction/edit", method = RequestMethod.POST)
     public ModelAndView editTransactionById(@ModelAttribute("transaction") @Valid TransactionDto transactionDto, BindingResult result, WebRequest request, Errors errors, Model model) throws SessionExpiredException, ParseException {
         SessionUtils.isUserSessionActive(httpSession);
-        System.out.println(transactionDto);
-        System.out.println(errors);
         if (result.hasErrors()) {
             addErrorsAttributesToModel(errors, model);
             addAttributesToModel(model);
@@ -85,6 +113,13 @@ public class TransactionsController {
         model.addAttribute("userAccountsNames", accountNames);
         model.addAttribute("placesDescriptions", placesDescriptions);
         model.addAttribute("transactionCategoriesNames", transactionCategoriesNames);
+    }
+
+    private void addAttributesToModel(Integer id, Model model) {
+        String username = (String) httpSession.getAttribute("username");
+        List<TransactionDto> transactionDtoList = transactionService.getUserTransactionByRange(username, (id - 1) * 10, 10);
+        model.addAttribute("transactions", transactionDtoList);
+        model.addAttribute("pathId", id);
     }
 
     private void addErrorsAttributesToModel(Errors errors, Model model) {

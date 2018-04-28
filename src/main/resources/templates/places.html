@@ -28,7 +28,7 @@
     <a class="nav-link" th:href="@{/homepage}">Strona główna</a>
     <a class="nav-link" th:href="@{/accounts}">Konta</a>
     <a class="nav-link" th:href="@{/budgets}">Budżety</a>
-    <a class="nav-link" th:href="@{/transactions}">Transakcje</a>
+    <a class="nav-link" th:href="@{/transactions/1}">Transakcje</a>
     <a class="nav-link" th:href="@{/places}">Miejsca</a>
     <a class="nav-link" th:href="@{/categories}">Kategorie</a>
     <span>
@@ -44,7 +44,35 @@
 </nav>
 <div class="container">
     <div class="login-panel border border-dark rounded px-5 py-5">
-
+        <h1 class="text-center">Miejsca</h1>
+        <p class="text-center font-size">Wykorzystane miejsca: <span class="text-danger font-weight-bold">
+        <p th:utext="${usedPlaces}" th:remove="tag"></p></span> z <p th:text="${availablePlaces}"
+                                                                       th:remove="tag"></p> dostępnych.</p>
+        <br>
+        <hr>
+        <br>
+        <div class="row">
+            <div class="col-6 text-center">
+                <h3>Miejsca predefiniowane:</h3>
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action list-group-item-light" th:each="place : ${preDefinedPlaces}" th:href="@{'/place?id=' + ${place.id}}">
+                        <div class="row">
+                            <span class="col-4 text-center"><p th:text="${place.description}" th:remove="tag"></p></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-6">
+                <h3>Twoje miejsca:</h3>
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action list-group-item-light" th:each="place : ${userCreatedPlaces}" th:href="@{'/place?id=' + ${place.id}}">
+                        <div class="row">
+                            <span class="col-4 text-center"><p th:text="${place.description}" th:remove="tag"></p></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

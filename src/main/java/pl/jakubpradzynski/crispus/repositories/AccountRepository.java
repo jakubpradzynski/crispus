@@ -81,11 +81,31 @@ public class AccountRepository {
     }
 
     @Transactional
+    public void deleteAccount(Account account) {
+        entityManager.remove(account);
+    }
+
+    @Transactional
+    public void removeAccount(Integer id) {
+        entityManager.createQuery("DELETE FROM ACCOUNT a WHERE a.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    @Transactional
     public void changeUserAccountByName(User user, ChangeAccountNameDto changeAccountNameDto) {
         entityManager.createQuery("UPDATE ACCOUNT a SET a.name=:newName WHERE a.name=:oldName AND a.user=:user")
                 .setParameter("newName", changeAccountNameDto.getNewName())
                 .setParameter("oldName", changeAccountNameDto.getOldName())
                 .setParameter("user", user)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void removeUserAccountByName(User user, String name) {
+        entityManager.createQuery("DELETE FROM ACCOUNT a WHERE a.user=:user AND a.name=:name")
+                .setParameter("user", user)
+                .setParameter("name", name)
                 .executeUpdate();
     }
 }
