@@ -5,25 +5,32 @@ import pl.jakubpradzynski.crispus.domain.Place;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class PlaceDto {
+public class PlaceDto implements Comparable<PlaceDto> {
 
-    @NotNull
     private Integer id;
 
     @NotNull(message = "Opis miejsca nie może być pusta")
     @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków")
     private String description;
 
+    private boolean isPreDefined;
+
     public static PlaceDto fromPlace(Place place) {
-        return new PlaceDto(place.getId(), place.getDescription());
+        return new PlaceDto(place.getId(), place.getDescription(), place.getUsers().isEmpty());
     }
 
     public PlaceDto() {
     }
 
-    public PlaceDto(@NotNull Integer id, @NotNull(message = "Opis miejsca nie może być pusta") @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków") String description) {
+    public PlaceDto(Integer id, @NotNull(message = "Opis miejsca nie może być pusta") @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków") String description) {
         this.id = id;
         this.description = description;
+    }
+
+    public PlaceDto(Integer id, @NotNull(message = "Opis miejsca nie może być pusta") @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków") String description, boolean isPreDefined) {
+        this.id = id;
+        this.description = description;
+        this.isPreDefined = isPreDefined;
     }
 
     public Integer getId() {
@@ -42,11 +49,25 @@ public class PlaceDto {
         this.description = description;
     }
 
+    public boolean isPreDefined() {
+        return isPreDefined;
+    }
+
+    public void setPreDefined(boolean preDefined) {
+        isPreDefined = preDefined;
+    }
+
     @Override
     public String toString() {
         return "PlaceDto{" +
                 "id=" + id +
                 ", description='" + description + '\'' +
+                ", isPreDefined=" + isPreDefined +
                 '}';
+    }
+
+    @Override
+    public int compareTo(PlaceDto o) {
+        return this.description.compareToIgnoreCase(o.description);
     }
 }

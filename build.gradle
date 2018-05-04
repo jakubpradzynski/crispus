@@ -22,8 +22,8 @@ mainClassName = 'pl.jakubpradzynski.crispus.CrispusApplication'
 
 group = 'pl.jakubpradzynski'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 10
+targetCompatibility = 10
 
 repositories {
 	mavenCentral()
@@ -46,8 +46,8 @@ dependencies {
 	compile group: 'org.webjars', name: 'bootstrap', version: '4.0.0'
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.15.Final'
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.1.7.Final'
-	runtime('com.h2database:h2')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile group: 'com.h2database', name: 'h2', version: '1.4.197'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.codehaus.groovy:groovy-all:2.4.10')
     testCompile('junit:junit:4.12')
 }

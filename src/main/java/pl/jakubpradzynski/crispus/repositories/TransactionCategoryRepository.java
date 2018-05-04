@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.Place;
 import pl.jakubpradzynski.crispus.domain.TransactionCategory;
 import pl.jakubpradzynski.crispus.domain.User;
+import pl.jakubpradzynski.crispus.dto.TransactionCategoryDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -36,9 +37,13 @@ public class TransactionCategoryRepository {
     }
 
     public TransactionCategory getTransactionCategoryByName(String name) {
-        return entityManager.createQuery("SELECT tc FROM TRANSACTION_CATEGORY tc WHERE tc.name=:name", TransactionCategory.class)
+        List<TransactionCategory> transactionCategories = entityManager.createQuery("SELECT tc FROM TRANSACTION_CATEGORY tc WHERE tc.name=:name", TransactionCategory.class)
                 .setParameter("name", name)
-                .getSingleResult();
+                .getResultList();
+        if (transactionCategories.isEmpty()) {
+            return null;
+        }
+        return transactionCategories.get(0);
     }
 
 
@@ -98,5 +103,27 @@ public class TransactionCategoryRepository {
     @Transactional
     public void deleteTransactionCategory(Integer id) {
         entityManager.remove(id);
+    }
+
+    public Collection<TransactionCategory> getCategoriesCreatedByUser(User user) {
+        return entityManager.createQuery("SELECT tc FROM TRANSACTION_CATEGORY tc WHERE :user in elements(tc.users)", TransactionCategory.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
+
+    @Transactional
+    public void removeTransactionCategory(Integer id) {
+        entityManager.createQuery("DELETE FROM TRANSACTION_CATEGORY tc WHERE tc.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void changeUserCategoryName(User user, TransactionCategoryDto transactionCategoryDto) {
+        entityManager.createQuery("UPDATE TRANSACTION_CATEGORY tc SET tc.name=:name WHERE tc.id=:id AND :user in elements(tc.users)")
+                .setParameter("name", transactionCategoryDto.getName())
+                .setParameter("id", transactionCategoryDto.getId())
+                .setParameter("user", user)
+                .executeUpdate();
     }
 }

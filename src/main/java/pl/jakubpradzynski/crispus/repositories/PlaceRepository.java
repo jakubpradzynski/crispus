@@ -4,6 +4,7 @@ import org.springframework.core.CollectionFactory;
 import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.Place;
 import pl.jakubpradzynski.crispus.domain.User;
+import pl.jakubpradzynski.crispus.dto.PlaceDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,9 +34,13 @@ public class PlaceRepository {
     }
 
     public Place getPlaceByDescription(String description) {
-        return entityManager.createQuery("SELECT p FROM PLACE p WHERE p.description=:description", Place.class)
+        List<Place> places = entityManager.createQuery("SELECT p FROM PLACE p WHERE p.description=:description", Place.class)
                 .setParameter("description", description)
-                .getSingleResult();
+                .getResultList();
+        if (places.isEmpty()) {
+            return null;
+        }
+        return places.get(0);
     }
 
     public Place getPlaceAvailableForUserByDescription(User user, String description) {
@@ -93,5 +98,21 @@ public class PlaceRepository {
         return entityManager.createQuery("SELECT p FROM PLACE p WHERE :user in elements(p.users)", Place.class)
                 .setParameter("user", user)
                 .getResultList();
+    }
+
+    @Transactional
+    public void removePlace(Integer id) {
+        entityManager.createQuery("DELETE FROM PLACE p WHERE p.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void changeUserPlaceDescription(User user, PlaceDto placeDto) {
+        entityManager.createQuery("UPDATE PLACE p SET p.description=:description WHERE p.id=:id AND :user in elements(p.users)")
+                .setParameter("description", placeDto.getDescription())
+                .setParameter("id", placeDto.getId())
+                .setParameter("user", user)
+                .executeUpdate();
     }
 }

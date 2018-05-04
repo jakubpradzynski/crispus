@@ -60,8 +60,28 @@ public class Starter implements CommandLineRunner {
         } catch (EmailExistsException e) {
             e.printStackTrace();
         }
+        try {
+            userService.registerNewUserAccount(new UserDto
+                    .UserDtoBuilder("Jakub", "Prądzyński")
+                    .email("jakubpradzynski@gmail.com")
+                    .phoneNumber("693-265-055")
+                    .password("1234")
+                    .matchingPassword("1234")
+                    .build());
+        } catch (EmailExistsException e) {
+            e.printStackTrace();
+        }
         User user = userRepository.getUserByEmail("jankowalski@gmail.com");
         for (int i = 0; i < 40; i ++)
             transactionRepository.createTransaction("Zakupy w biedronce " + i, user, accountRepository.getUserAccountByName(user, "Konto podstawowe"), 123., new Date(), placeRepository.getPlaceByDescription("Biedronka"), transactionCategoryRepository.getTransactionCategoryByName("Ubrania"));
+        User admin = userRepository.getUserByEmail("jakubpradzynski@gmail.com");
+        admin.setUserType(userTypeRepository.getUserTypeByName("premium"));
+        userRepository.updateUser(admin);
+        for (int i = 0; i < 40; i ++)
+            transactionRepository.createTransaction("Zakupy w biedronce " + i, admin, accountRepository.getUserAccountByName(admin, "Konto podstawowe"), 123., new Date(), placeRepository.getPlaceByDescription("Biedronka"), transactionCategoryRepository.getTransactionCategoryByName("Ubrania"));
+        accountRepository.createAccount(admin, "Drugie konto", 1200.);
+        for (int i = 0; i < 40; i ++)
+            transactionRepository.createTransaction("Zakupy w biedronce " + i, admin, accountRepository.getUserAccountByName(admin, "Drugie konto"), -12., new Date(), placeRepository.getPlaceByDescription("Lidl"), transactionCategoryRepository.getTransactionCategoryByName("Jedzenie"));
+
     }
 }

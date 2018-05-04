@@ -133,7 +133,7 @@ public class Transaction {
                 ", account=" + account +
                 ", value=" + value +
                 ", date=" + date +
-                ", place=" + place +
+                ", place.html=" + place +
                 ", transactionCategory=" + transactionCategory +
                 '}';
     }

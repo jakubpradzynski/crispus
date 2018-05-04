@@ -44,7 +44,50 @@
 </nav>
 <div class="container">
     <div class="login-panel border border-dark rounded px-5 py-5">
-
+        <h1 class="text-center">Kategorie</h1>
+        <p class="text-center font-size">Wykorzystane kategorie: <span class="text-danger font-weight-bold">
+        <p th:utext="${usedCategories}" th:remove="tag"></p></span> z <p th:text="${availableCategories}"
+                                                                     th:remove="tag"></p> dostępnych.</p>
+        <br>
+        <hr>
+        <br>
+        <div th:if="${usedCategories} < ${availableCategories}" class="container">
+            <form th:object="${newCategory}" th:action="@{'/category/add'}" method="POST" enctype="utf8" class="text-center">
+                <h4>Dodaj nową kategorię</h4>
+                <div class="row text-center">
+                    <div class="col-10">
+                        <input th:field="*{name}" type="text" class="form-control" placeholder="Nazwa kategorii">
+                        <p class="text-danger text-center">
+                            <th:block th:if="${invalidCategoryName} != null" th:text="${invalidCategoryName}"/>
+                        </p>
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-success">Dodaj</button>
+                    </div>
+                </div>
+            </form>
+            <br>
+            <hr>
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-6 text-center">
+                <h4>Kategorie predefiniowane:</h4>
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action list-group-item-success text-center" th:each="category : ${preDefinedCategories}" th:href="@{'/category/' + ${category.id} + '/1'}">
+                        <p th:text="${category.name}" th:remove="tag"></p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-6 text-center">
+                <h4>Twoje kategorie:</h4>
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action list-group-item-warning text-center" th:each="category : ${userCreatedCategories}" th:href="@{'/category/' + ${category.id} + '/1'}">
+                        <p th:text="${category.name}" th:remove="tag"></p>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

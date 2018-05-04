@@ -51,24 +51,39 @@
         <br>
         <hr>
         <br>
+        <div th:if="${usedPlaces} < ${availablePlaces}" class="container">
+            <form th:object="${newPlace}" th:action="@{'/place/add'}" method="POST" enctype="utf8" class="text-center">
+                <h4>Dodaj nowe miejsce</h4>
+                <div class="row text-center">
+                    <div class="col-10">
+                        <input th:field="*{description}" type="text" class="form-control" placeholder="Opis miejsca">
+                        <p class="text-danger text-center">
+                            <th:block th:if="${invalidPlaceDescription} != null" th:text="${invalidPlaceDescription}"/>
+                        </p>
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-success">Dodaj</button>
+                    </div>
+                </div>
+            </form>
+            <br>
+            <hr>
+            <br>
+        </div>
         <div class="row">
             <div class="col-6 text-center">
-                <h3>Miejsca predefiniowane:</h3>
+                <h4>Miejsca predefiniowane:</h4>
                 <div class="list-group">
-                    <a class="list-group-item list-group-item-action list-group-item-light" th:each="place : ${preDefinedPlaces}" th:href="@{'/place?id=' + ${place.id}}">
-                        <div class="row">
-                            <span class="col-4 text-center"><p th:text="${place.description}" th:remove="tag"></p></span>
-                        </div>
+                    <a class="list-group-item list-group-item-action list-group-item-success text-center" th:each="place : ${preDefinedPlaces}" th:href="@{'/place/' + ${place.id} + '/1'}">
+                        <p th:text="${place.description}" th:remove="tag"></p>
                     </a>
                 </div>
             </div>
-            <div class="col-6">
-                <h3>Twoje miejsca:</h3>
+            <div class="col-6 text-center">
+                <h4>Twoje miejsca:</h4>
                 <div class="list-group">
-                    <a class="list-group-item list-group-item-action list-group-item-light" th:each="place : ${userCreatedPlaces}" th:href="@{'/place?id=' + ${place.id}}">
-                        <div class="row">
-                            <span class="col-4 text-center"><p th:text="${place.description}" th:remove="tag"></p></span>
-                        </div>
+                    <a class="list-group-item list-group-item-action list-group-item-warning text-center" th:each="place : ${userCreatedPlaces}" th:href="@{'/place/' + ${place.id} + '/1'}">
+                        <p th:text="${place.description}" th:remove="tag"></p>
                     </a>
                 </div>
             </div>

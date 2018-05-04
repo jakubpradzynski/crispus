@@ -59,13 +59,8 @@ public class User {
     @JoinColumn(name = "TRANSACTION_CATEGORY_FK")
     private Set<TransactionCategory> transactionCategories;
 
-    @NotNull
-    @Column(name = "enabled")
-    private boolean enabled;
-
     public User() {
         super();
-        this.enabled = false;
     }
 
     public User(@NotNull @Email @Size(max = 50, message = "EmailValidator musi mieć maksymalnie 50 znaków") String email, @NotNull String passwordHash, @NotNull String salt, @NotNull(message = "Imie nie może być puste") @Size(min = 3, max = 20, message = "Imie musi mieć od 3 do 20 znaków") String name, @NotNull(message = "Nazwisko nie może być puste") @Size(min = 3, max = 30, message = "Nazwisko musi mieć od 3 do 30 znaków") String surname, String phoneNumber, @NotNull UserType userType, Set<Place> places, Set<TransactionCategory> transactionCategories) {
@@ -78,19 +73,6 @@ public class User {
         this.userType = userType;
         this.places = places;
         this.transactionCategories = transactionCategories;
-    }
-
-    public User(@NotNull @Email @Size(max = 50, message = "EmailValidator musi mieć maksymalnie 50 znaków") String email, @NotNull String passwordHash, @NotNull String salt, @NotNull(message = "Imie nie może być puste") @Size(min = 3, max = 20, message = "Imie musi mieć od 3 do 20 znaków") String name, @NotNull(message = "Nazwisko nie może być puste") @Size(min = 3, max = 30, message = "Nazwisko musi mieć od 3 do 30 znaków") String surname, String phoneNumber, @NotNull UserType userType, Set<Place> places, Set<TransactionCategory> transactionCategories, @NotNull boolean enabled) {
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.salt = salt;
-        this.name = name;
-        this.surname = surname;
-        this.phoneNumber = phoneNumber;
-        this.userType = userType;
-        this.places = places;
-        this.transactionCategories = transactionCategories;
-        this.enabled = enabled;
     }
 
     public Integer getId() {
@@ -173,14 +155,6 @@ public class User {
         this.transactionCategories = transactionCategories;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -194,7 +168,6 @@ public class User {
                 ", userType=" + userType +
                 ", places=" + places +
                 ", transactionCategories=" + transactionCategories +
-                ", enabled=" + enabled +
                 '}';
     }
 }

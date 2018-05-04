@@ -62,4 +62,10 @@ public class UserTypeRepository {
                 .setParameter("id", user.getUserType().getId())
                 .getSingleResult();
     }
+
+    public Integer getCategoryNumberAvailableForUser(User user) {
+        return entityManager.createQuery("SELECT ut.transactionCategoryLimit FROM USER_TYPE ut WHERE ut.id=:id", Integer.class)
+                .setParameter("id", user.getUserType().getId())
+                .getSingleResult();
+    }
 }

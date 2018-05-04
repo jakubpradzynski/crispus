@@ -23,29 +23,12 @@
     <script th:src="@{/js/global.js}"></script>
 </head>
 <body>
-<div layout:fragment="content">
-    <script type="text/javascript">
-        function checkOldName(oldName) {
-            var input = document.getElementById('oldName').value;
-            checkName();
-
-            setInterval(checkName, 100);
-
-            function checkName() {
-                input = document.getElementById('oldName').value;
-                if (input === oldName) {
-                    document.getElementById('editButton').disabled = false;
-                }
-            }
-        }
-    </script>
-</div>
 <nav id="menu" class="navbar fixed-top navbar-light rounded-bottom border-bottom border-dark font-weight-bold">
     <a class="navbar-brand text-dark">Menu</a>
     <a class="nav-link" th:href="@{/homepage}">Strona główna</a>
     <a class="nav-link" th:href="@{/accounts}">Konta</a>
     <a class="nav-link" th:href="@{/budgets}">Budżety</a>
-    <a class="nav-link" th:href="@{/transactions}">Transakcje</a>
+    <a class="nav-link" th:href="@{/transactions/1}">Transakcje</a>
     <a class="nav-link" th:href="@{/places}">Miejsca</a>
     <a class="nav-link" th:href="@{/categories}">Kategorie</a>
     <span>
@@ -130,17 +113,29 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <div class="modal-body">
-                                    <p th:if="${usedAccounts} == 1">Nie można usunąć konta. Musisz posiadać przynajmniej
-                                        jedno konto! Najpierw dodaj nowe konto, następnie usuń te.</p>
-                                    <p th:if="${usedAccounts} != 1">Usunięcie konta spowoduje usunięcie wszystkich
-                                        transakcji przypisanych do tego konta!</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-success" data-dismiss="modal">Zamknij</button>
-                                    <button type="button" class="btn btn-danger" th:if="${usedAccounts} != 1">Usuń
-                                    </button>
-                                </div>
+                                <form action="#" th:object="${removeAccountDto}" th:action="@{'/account/remove'}"
+                                      method="POST" enctype="utf8">
+                                    <div class="modal-body">
+                                        <p th:if="${usedAccounts} == 1">Nie można usunąć konta. Musisz posiadać
+                                            przynajmniej
+                                            jedno konto! Najpierw dodaj nowe konto, następnie usuń te.</p>
+                                        <div th:if="${usedAccounts} != 1">
+                                            <p>Usunięcie konta spowoduje usunięcie wszystkich
+                                                transakcji przypisanych do tego konta!</p>
+                                            <p th:remove="tag">Podaj starą nazwę konta, aby je usunąć: </p>
+                                            <br>
+                                            <input class="removeName" type="text" th:field="*{name}">
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-dismiss="modal">Zamknij
+                                        </button>
+                                        <button type="submit" class="btn btn-danger removeButton"
+                                                th:if="${usedAccounts} != 1">Usuń
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -159,12 +154,13 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form action="#" th:object="${changeAccountNameDto}" th:action="@{'/account/edit'}" method="POST"
+                                <form action="#" th:object="${changeAccountNameDto}" th:action="@{'/account/edit'}"
+                                      method="POST"
                                       enctype="utf8">
                                     <div class="modal-body">
                                         <p th:remove="tag">Podaj starą nazwę konta, aby potwierdzić zmianę: </p>
                                         <br>
-                                        <input th:onclick="'javascript:checkOldName(\'' + ${accountValue.accountName} + '\');'" id="oldName" type="text" th:field="*{oldName}">
+                                        <input class="oldName" type="text" th:field="*{oldName}">
                                         <br><br>
                                         <p th:remove="tag">Nowa nazwa konta: </p>
                                         <br>
@@ -173,7 +169,9 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-success" data-dismiss="modal">Zamknij
                                         </button>
-                                        <button id="editButton" type="submit" class="btn btn-danger" disabled="true">Zmień</button>
+                                        <button id="editButton" type="submit" class="btn btn-danger">
+                                            Zmień
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -191,14 +189,21 @@
                 <div class="row text-center">
                     <div class="col-8">
                         <input th:field="*{name}" type="text" class="form-control" placeholder="Nazwa konta">
-                        <p class="text-danger text-center"><th:block th:if="${invalidAccountName} != null" th:text="${invalidAccountName}"/></p>
+                        <p class="text-danger text-center">
+                            <th:block th:if="${invalidAccountName} != null" th:text="${invalidAccountName}"/>
+                        </p>
                     </div>
                     <div class="col-4">
-                        <input th:field="*{moneyAmount}" value="0" type="number" step="0.01" class="form-control" placeholder="Początkowy stan konta">
-                        <p class="text-danger text-center"><th:block th:if="${invalidAccountAmount} != null" th:text="${invalidAccountAmount}"/></p>
+                        <input th:field="*{moneyAmount}" value="0" type="number" step="0.01" class="form-control"
+                               placeholder="Początkowy stan konta">
+                        <p class="text-danger text-center">
+                            <th:block th:if="${invalidAccountAmount} != null" th:text="${invalidAccountAmount}"/>
+                        </p>
                     </div>
                     <input th:field="*{username}" th:value="${session.username}" th:hidden="true"/>
-                    <p class="text-danger text-center"><th:block th:if="${usernameError} != null" th:text="${usernameError}"/></p>
+                    <p class="text-danger text-center">
+                        <th:block th:if="${usernameError} != null" th:text="${usernameError}"/>
+                    </p>
                 </div>
                 <br>
                 <div class="row text-center">

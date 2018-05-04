@@ -3,6 +3,7 @@ package pl.jakubpradzynski.crispus.repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.*;
+import pl.jakubpradzynski.crispus.dto.PlaceDto;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 
 import javax.persistence.EntityManager;
@@ -132,5 +133,57 @@ public class TransactionRepository {
         List<TransactionDto> transactionDtoList = new ArrayList<>();
         transactions.forEach(transaction -> transactionDtoList.add(TransactionDto.fromTransaction(transaction)));
         return transactionDtoList;
+    }
+
+    public Collection<Transaction> getUserTransactionsAssignedToPlaceInRange(User user, Place place, Integer start, Integer max) {
+        return entityManager.createQuery("SELECT t FROM TRANSACTION t WHERE t.place=:place AND t.user=:user ORDER BY t.date DESC", Transaction.class)
+                .setParameter("place", place)
+                .setParameter("user", user)
+                .setFirstResult(start)
+                .setMaxResults(max)
+                .getResultList();
+    }
+
+    @Transactional
+    public void removePlaceFromTransacitons(User user, Place place) {
+        entityManager.createQuery("UPDATE TRANSACTION t SET t.place=null WHERE t.place=:place AND t.user=:user")
+                .setParameter("place", place)
+                .setParameter("user", user)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void changePlaceInUserTransactions(User user, Place oldPlace, Place newPlace) {
+        entityManager.createQuery("UPDATE TRANSACTION t SET t.place=:newPlace WHERE t.place=:oldPlace AND t.user=:user")
+                .setParameter("newPlace", newPlace)
+                .setParameter("oldPlace", oldPlace)
+                .setParameter("user", user)
+                .executeUpdate();
+    }
+
+    public Collection<Transaction> getUserTransactionsAssignedToCategoryInRange(User user, TransactionCategory transactionCategory, Integer start, Integer max) {
+        return entityManager.createQuery("SELECT t FROM TRANSACTION t WHERE t.transactionCategory=:transactionCategory AND t.user=:user ORDER BY t.date DESC", Transaction.class)
+                .setParameter("transactionCategory", transactionCategory)
+                .setParameter("user", user)
+                .setFirstResult(start)
+                .setMaxResults(max)
+                .getResultList();
+    }
+
+    @Transactional
+    public void removeCategoryFromTransacitons(User user, TransactionCategory transactionCategory) {
+        entityManager.createQuery("UPDATE TRANSACTION t SET t.transactionCategory=null WHERE t.transactionCategory=:transactionCategory AND t.user=:user")
+                .setParameter("transactionCategory", transactionCategory)
+                .setParameter("user", user)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void changeCategoryInUserTransactions(User user, TransactionCategory oldCategory, TransactionCategory newCategory) {
+        entityManager.createQuery("UPDATE TRANSACTION t SET t.transactionCategory=:newCategory WHERE t.transactionCategory=:oldCategory AND t.user=:user")
+                .setParameter("newCategory", newCategory)
+                .setParameter("oldCategory", oldCategory)
+                .setParameter("user", user)
+                .executeUpdate();
     }
 }

@@ -81,7 +81,7 @@ public class TransactionListingDto {
     public String toString() {
         return "TransactionListingDto{" +
                 "account='" + account + '\'' +
-                ", place='" + place + '\'' +
+                ", place.html='" + place + '\'' +
                 ", category='" + category + '\'' +
                 ", value=" + value +
                 ", biggerThan=" + biggerThan +
