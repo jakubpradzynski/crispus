@@ -3,18 +3,18 @@ package pl.jakubpradzynski.crispus.repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.*;
+import pl.jakubpradzynski.crispus.dto.MonthlyBudgetInfoDto;
 import pl.jakubpradzynski.crispus.dto.PlaceDto;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class TransactionRepository {
@@ -185,5 +185,23 @@ public class TransactionRepository {
                 .setParameter("oldCategory", oldCategory)
                 .setParameter("user", user)
                 .executeUpdate();
+    }
+
+    public Double getUserBudgetUsedAmount(User user, MonthlyBudgetInfoDto monthlyBudgetInfoDto) {
+        List<Transaction> budgetTransactions = (List<Transaction>) getUserTransactionsInBudget(user, monthlyBudgetInfoDto);
+        final Double[] usedAmount = {0.};
+        budgetTransactions.forEach(transaction -> {
+             usedAmount[0] += transaction.getValue();
+        });
+        return usedAmount[0];
+    }
+
+    public Collection<Transaction> getUserTransactionsInBudget(User user, MonthlyBudgetInfoDto monthlyBudgetInfoDto) {
+        List<Transaction> budgetTransactions = entityManager.createQuery("SELECT t FROM TRANSACTION t WHERE t.user=:user AND t.date BETWEEN :startDate AND :endDate", Transaction.class)
+                .setParameter("user", user)
+                .setParameter("startDate", monthlyBudgetInfoDto.getStartDate())
+                .setParameter("endDate", monthlyBudgetInfoDto.getEndDate())
+                .getResultList();
+        return budgetTransactions.stream().filter(transaction -> transaction.getValue() < 0).collect(Collectors.toList());
     }
 }

@@ -44,7 +44,79 @@
 </nav>
 <div class="container">
     <div class="login-panel border border-dark rounded px-5 py-5">
-
+        <h1 class="text-center">Budżety</h1>
+        <br>
+        <hr>
+        <br>
+        <div th:if="${actualBudget} == null" class="container text-center">
+            <h4 class="text-center">Dodaj budżet na obecny miesiąc</h4>
+            <small class="text-center">Budżet ma sens tylko wtedy gdy został przemyślany, dlatego po dodaniu nie będziesz mieć już możliwości jego edytowania!</small>
+            <br><br>
+            <form action="#" th:object="${newBudget}" th:action="@{/budget/add}" method="POST" enctype="utf8" >
+                <div class="form-group row">
+                    <div class="col-4">
+                        <input class="form-control" type="text" th:placeholder="'Data początkowa: ' + ${newBudget.startDate}" disabled>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" type="text" th:placeholder="'Data końcowa: ' + ${newBudget.endDate}" disabled>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" type="number" th:field="*{amount}" th:value="1" th:placeholder="'Kwota (min 1zł)'" min="1">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-success" >Dodaj</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div th:if="${actualBudget} != null" class="container">
+            <h3 class="text-center">Obecny miesiąc</h3><br>
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6 text-center lead row">
+                    <div class="col-6">
+                        <p>Data początkowa: </p>
+                        <p>Data końcowa</p>
+                        <p>Kwota: </p>
+                        <p class="text-danger">Wykorzystane: </p>
+                        <span th:if="${actualBudget.difference >= 0}" class="text-success"><p th:remove="tag">Pozostało: </p></span>
+                        <span th:if="${actualBudget.difference < 0}" class="text-danger"><p th:remove="tag">Przekroczono: </p></span>
+                    </div>
+                    <div class="col-6">
+                        <p th:text="${#dates.format(actualBudget.startDate, 'dd-MM-yyyy')}"></p>
+                        <p th:text="${#dates.format(actualBudget.endDate, 'dd-MM-yyyy')}"></p>
+                        <p th:text="${actualBudget.amount} + 'zł'"></p>
+                        <p th:text="${actualBudget.usedAmount} + 'zł'" class="text-danger"></p>
+                        <span th:if="${actualBudget.difference >= 0}" class="text-success"><p th:text="${actualBudget.difference} + 'zł'"></p></span>
+                        <span th:if="${actualBudget.difference < 0}" class="text-danger"><p th:text="${actualBudget.difference} + 'zł'"></p></span>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <br><a th:href="@{'/budget/transactions/' + ${actualBudget.id}}"><button type="button" th:text="'Pokaż transakcje z tego budżetu'"></button></a>
+                </div>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <div class="container">
+            <h3 class="text-center">Ostatnie budżety</h3>
+            <div class="list-group">
+                <a class="list-group-item list-group-item-action list-group-item-light" th:each="budget : ${lastBudgets}" th:href="@{'/budget/' + ${budget.id}}">
+                    <div class="row">
+                        <span class="col-4 text-center"><p th:text="${budget.amount} + 'zł'" th:remove="tag"></p></span>
+                        <span class="col-4 text-center"><p th:text="${#dates.format(budget.startDate, 'dd-MM-yyyy')} + ' - ' + ${#dates.format(budget.endDate, 'dd-MM-yyyy')}" th:remove="tag"></p></span>
+                        <span th:if="${budget.difference >= 0}" class="col-4 text-center text-success"><p th:text="${budget.difference} + 'zł'" th:remove="tag"></p></span>
+                        <span th:if="${budget.difference < 0}" class="col-4 text-center text-danger"><p th:text="${budget.difference} + 'zł'" th:remove="tag"></p></span>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 </body>

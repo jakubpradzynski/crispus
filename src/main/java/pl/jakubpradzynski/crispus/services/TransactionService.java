@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.repositories.*;
+import pl.jakubpradzynski.crispus.utils.DateUtils;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -34,13 +35,12 @@ public class TransactionService {
     @Transactional
     public void addNewUserTransaction(TransactionDto transactionDto) throws ParseException {
         User user = userRepository.getUserByEmail(transactionDto.getUsername());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         transactionRepository.createTransaction(
                 transactionDto.getDescription(),
                 user,
                 accountRepository.getUserAccountByName(user, transactionDto.getAccountName()),
                 transactionDto.getValue(),
-                format.parse(transactionDto.getDate()),
+                DateUtils.stringToDate(transactionDto.getDate(), "yyyy-MM-dd"),
                 !transactionDto.getPlaceDescription().equals("") ? placeRepository.getPlaceByDescription(transactionDto.getPlaceDescription()) : null,
                 !transactionDto.getTransactionCategoryName().equals("") ? transactionCategoryRepository.getTransactionCategoryByName(transactionDto.getTransactionCategoryName()) : null
         );

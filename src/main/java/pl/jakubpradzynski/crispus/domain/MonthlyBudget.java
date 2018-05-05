@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity(name = "MONTHLY_BUDGET")
 @Table(name = "MONTHLY_BUDGET")
@@ -21,15 +22,13 @@ public class MonthlyBudget {
     @JoinColumn(name = "USER_FK")
     private User user;
 
-    @NotNull(message = "Miesiąc nie może być pusty")
-    @Size(min = 3, max = 20, message = "Miesiąc musi mieć od 3 do 20 znaków")
-    @Column(name = "MONTH")
-    private String month;
+    @NotNull(message = "Data początkowa nie może być pusta")
+    @Column(name = "START_DATE")
+    private Date startDate;
 
-    @NotNull(message = "Rok nie może być pusty")
-    @Range(min = 2000, max = 2050, message = "Rok musi być z zakresu 2000-2050")
-    @Column(name = "YEAR")
-    private Integer year;
+    @NotNull(message = "Data końcowa nie może być pusta")
+    @Column(name = "END_DATE")
+    private Date endDate;
 
     @NotNull
     @Column(name = "AMOUNT")
@@ -38,10 +37,10 @@ public class MonthlyBudget {
     public MonthlyBudget() {
     }
 
-    public MonthlyBudget(@NotNull User user, @NotNull(message = "Miesiąc nie może być pusty") @Size(min = 3, max = 20, message = "Miesiąc musi mieć od 3 do 20 znaków") String month, @NotNull(message = "Rok nie może być pusty") @Range(min = 2000, max = 2050, message = "Rok musi być z zakresu 2000-2050") Integer year, @NotNull Double amount) {
+    public MonthlyBudget(@NotNull User user, @NotNull(message = "Data początkowa nie może być pusta") Date startDate, @NotNull(message = "Data końcowa nie może być pusta") Date endDate, @NotNull Double amount) {
         this.user = user;
-        this.month = month;
-        this.year = year;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.amount = amount;
     }
 
@@ -61,20 +60,20 @@ public class MonthlyBudget {
         this.user = user;
     }
 
-    public String getMonth() {
-        return month;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setMonth(String month) {
-        this.month = month;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public Integer getYear() {
-        return year;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public Double getAmount() {
@@ -90,8 +89,8 @@ public class MonthlyBudget {
         return "MonthlyBudget{" +
                 "id=" + id +
                 ", user=" + user +
-                ", month='" + month + '\'' +
-                ", year=" + year +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 ", amount=" + amount +
                 '}';
     }

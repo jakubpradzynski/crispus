@@ -2,11 +2,13 @@ package pl.jakubpradzynski.crispus.repositories;
 
 import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.*;
+import pl.jakubpradzynski.crispus.dto.MonthlyBudgetInfoDto;
+import pl.jakubpradzynski.crispus.utils.DateUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.Collection;
+import java.util.*;
 
 @Repository
 public class MonthlyBudgetRepository {
@@ -15,8 +17,8 @@ public class MonthlyBudgetRepository {
     private EntityManager entityManager;
 
     @Transactional
-    public void createMonthlyBudget(User user, String month, Integer year, Double amount) {
-        MonthlyBudget monthlyBudget = new MonthlyBudget(user, month, year, amount);
+    public void createMonthlyBudget(User user, Date startDate, Date endDate, Double amount) {
+        MonthlyBudget monthlyBudget = new MonthlyBudget(user, startDate, endDate, amount);
         entityManager.persist(monthlyBudget);
     }
 
@@ -29,11 +31,10 @@ public class MonthlyBudgetRepository {
         return entityManager.find(MonthlyBudget.class, id);
     }
 
-    public MonthlyBudget getUserMonthlyBudgetByDate(User user, String month, Integer year) {
-        return entityManager.createQuery("SELECT mb FROM MONTHLY_BUDGET mb WHERE mb.user=:user AND mb.month=:month AND mb.year=:year", MonthlyBudget.class)
+    public MonthlyBudget getUserMonthlyBudgetByDate(User user, Date date) {
+        return entityManager.createQuery("SELECT mb FROM MONTHLY_BUDGET mb WHERE mb.user=:user AND :date BETWEEN mb.startDate AND mb.endDate", MonthlyBudget.class)
                 .setParameter("user", user)
-                .setParameter("month", month)
-                .setParameter("year", year)
+                .setParameter("date", date)
                 .getSingleResult();
     }
 
@@ -51,5 +52,15 @@ public class MonthlyBudgetRepository {
     @Transactional
     public void deleteMonthlyBudget(Integer id) {
         entityManager.remove(id);
+    }
+
+    public MonthlyBudgetInfoDto getUserActualMonthlyBudgetDto(User user) {
+        Date date = new Date();
+        List<MonthlyBudget> monthlyBudgets = entityManager.createQuery("SELECT mb FROM MONTHLY_BUDGET mb WHERE mb.user=:user AND :date BETWEEN mb.startDate AND mb.endDate", MonthlyBudget.class)
+                .setParameter("user", user)
+                .setParameter("date", date)
+                .getResultList();
+        if (monthlyBudgets.isEmpty()) return null;
+        return MonthlyBudgetInfoDto.fromMonthlyBudget(monthlyBudgets.get(0));
     }
 }
