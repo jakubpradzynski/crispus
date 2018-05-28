@@ -70,15 +70,15 @@ public class HomepageController {
     private void addAttributesToModel(Model model) {
         List<String> accountNames = dataService.getUserAccountsNames((String) httpSession.getAttribute("username"));
         Collections.sort(accountNames, String.CASE_INSENSITIVE_ORDER);
-        List<String> placesDescriptions = dataService.getPlacesDescriptionsAvailableForUser((String) httpSession.getAttribute("username"));
-        Collections.sort(placesDescriptions, String.CASE_INSENSITIVE_ORDER);
+        List<String> placesNames = dataService.getPlacesNamesAvailableForUser((String) httpSession.getAttribute("username"));
+        Collections.sort(placesNames, String.CASE_INSENSITIVE_ORDER);
         List<String> transactionCategoriesNames = dataService.getTransactionCategoriesNamesAvailableForUser((String) httpSession.getAttribute("username"));
         Collections.sort(transactionCategoriesNames, String.CASE_INSENSITIVE_ORDER);
         model.addAttribute("userPublicData", dataService.getPublicUserData((String) httpSession.getAttribute("username")));
         model.addAttribute("lastTenTransactionsDto", dataService.getUserLastTenTransactionsDto((String) httpSession.getAttribute("username")));
         model.addAttribute("newTransactionDto", new TransactionDto((String) httpSession.getAttribute("username")));
         model.addAttribute("userAccountsNames", accountNames);
-        model.addAttribute("placesDescriptions", placesDescriptions);
+        model.addAttribute("placesNames", placesNames);
         model.addAttribute("transactionCategoriesNames", transactionCategoriesNames);
     }
 

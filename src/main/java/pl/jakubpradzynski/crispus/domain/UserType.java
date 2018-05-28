@@ -11,7 +11,8 @@ import javax.validation.constraints.Size;
 public class UserType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_type_id_generator")
+    @SequenceGenerator(name="user_type_id_generator", sequenceName="user_type_seq_for_id", initialValue = 1, allocationSize = 1)
     @NotNull
     @Column(name = "ID")
     private Integer id;
@@ -28,8 +29,8 @@ public class UserType {
 
     @NotNull(message = "Limit kategorii transakcji nie może być pusty")
     @Range(min = 1, max = 15, message = "Limit kategorii transakcji musi być z zakresu od 1 do 15")
-    @Column(name = "TRANSACTION_CATEGORY_LIMIT")
-    private Integer transactionCategoryLimit;
+    @Column(name = "CATEGORY_LIMIT")
+    private Integer categoryLimit;
 
     @NotNull(message = "Limit miejsc nie może być pusty")
     @Range(min = 1, max = 15, message = "Limit miejsc musi być z zakresu od 1 do 15")
@@ -39,10 +40,10 @@ public class UserType {
     public UserType() {
     }
 
-    public UserType(@NotNull(message = "Nazwa typu użytkownika nie może być pusta") @Size(max = 20, message = "Nazwa typu użytkownika nie może mieć więcej niż 20 znaków") String name, @NotNull(message = "Limit kont nie może być pusty") @Range(min = 1, max = 5, message = "Limit kont musi być z zakresu od 1 do 5") Integer accountLimit, @NotNull(message = "Limit kategorii transakcji nie może być pusty") @Range(min = 1, max = 15, message = "Limit kategorii transakcji musi być z zakresu od 1 do 15") Integer transactionCategoryLimit, @NotNull(message = "Limit miejsc nie może być pusty") @Range(min = 1, max = 15, message = "Limit miejsc musi być z zakresu od 1 do 15") Integer placeLimit) {
+    public UserType(@NotNull(message = "Nazwa typu użytkownika nie może być pusta") @Size(max = 20, message = "Nazwa typu użytkownika nie może mieć więcej niż 20 znaków") String name, @NotNull(message = "Limit kont nie może być pusty") @Range(min = 1, max = 5, message = "Limit kont musi być z zakresu od 1 do 5") Integer accountLimit, @NotNull(message = "Limit kategorii transakcji nie może być pusty") @Range(min = 1, max = 15, message = "Limit kategorii transakcji musi być z zakresu od 1 do 15") Integer categoryLimit, @NotNull(message = "Limit miejsc nie może być pusty") @Range(min = 1, max = 15, message = "Limit miejsc musi być z zakresu od 1 do 15") Integer placeLimit) {
         this.name = name;
         this.accountLimit = accountLimit;
-        this.transactionCategoryLimit = transactionCategoryLimit;
+        this.categoryLimit = categoryLimit;
         this.placeLimit = placeLimit;
     }
 
@@ -70,12 +71,12 @@ public class UserType {
         this.accountLimit = accountLimit;
     }
 
-    public Integer getTransactionCategoryLimit() {
-        return transactionCategoryLimit;
+    public Integer getCategoryLimit() {
+        return categoryLimit;
     }
 
-    public void setTransactionCategoryLimit(Integer transactionCategoryLimit) {
-        this.transactionCategoryLimit = transactionCategoryLimit;
+    public void setCategoryLimit(Integer categoryLimit) {
+        this.categoryLimit = categoryLimit;
     }
 
     public Integer getPlaceLimit() {
@@ -92,7 +93,7 @@ public class UserType {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", accountLimit=" + accountLimit +
-                ", transactionCategoryLimit=" + transactionCategoryLimit +
+                ", categoryLimit=" + categoryLimit +
                 ", placeLimit=" + placeLimit +
                 '}';
     }

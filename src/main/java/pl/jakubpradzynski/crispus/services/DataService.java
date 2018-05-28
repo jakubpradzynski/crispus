@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.jakubpradzynski.crispus.dto.PublicUserData;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
-import pl.jakubpradzynski.crispus.domain.Transaction;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.repositories.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,7 +22,7 @@ public class DataService {
     AccountRepository accountRepository;
 
     @Autowired
-    TransactionCategoryRepository transactionCategoryRepository;
+    CategoryRepository categoryRepository;
 
     @Autowired
     TransactionRepository transactionRepository;
@@ -36,7 +34,7 @@ public class DataService {
         User user = userRepository.getUserByEmail(username);
         Integer usedAccounts = accountService.getUserUsedAccountsNumber(username);
         Integer usedPlaces = placeRepository.getUserUsedPlacesNumber(user);
-        Integer usedTransactionCategories = transactionCategoryRepository.getUserUsedTransactionCategoriesNumber(user);
+        Integer usedTransactionCategories = categoryRepository.getUserUsedCategoriesNumber(user);
         PublicUserData publicUserData = new PublicUserData(user.getName(), user.getSurname(), user.getEmail(), user.getPhoneNumber(), user.getUserType(), usedAccounts, usedPlaces, usedTransactionCategories);
         return publicUserData;
     }
@@ -53,15 +51,15 @@ public class DataService {
         return userAccountsNames;
     }
 
-    public List<String> getPlacesDescriptionsAvailableForUser(String username) {
+    public List<String> getPlacesNamesAvailableForUser(String username) {
         User user = userRepository.getUserByEmail(username);
-        List<String> placesDescriptions = (List<String>) placeRepository.getAllPlacesDescriptionsAvailableForUser(user);
-        return placesDescriptions;
+        List<String> placesNames = (List<String>) placeRepository.getAllPlacesNamesAvailableForUser(user);
+        return placesNames;
     }
 
     public List<String> getTransactionCategoriesNamesAvailableForUser(String username) {
         User user = userRepository.getUserByEmail(username);
-        List<String> transactionCategoryNames = (List<String>) transactionCategoryRepository.getAllTransactionCategoriesNamesAvailableForUser(user);
+        List<String> transactionCategoryNames = (List<String>) categoryRepository.getAllCategoriesNamesAvailableForUser(user);
         return transactionCategoryNames;
     }
 }

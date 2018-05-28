@@ -8,19 +8,20 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
-@Entity(name = "USER")
-@Table(name = "USER")
+@Entity(name = "USERS")
+@Table(name = "USERS")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_generator")
+    @SequenceGenerator(name="users_id_generator", sequenceName="users_seq_for_id", initialValue = 1, allocationSize = 1)
     @Column(name = "ID")
     @NotNull
     private Integer id;
 
     @NotNull
     @Email
-    @Size(max = 50, message = "EmailValidator musi mieć maksymalnie 50 znaków")
+    @Size(max = 50, message = "Email musi mieć maksymalnie 50 znaków")
     @Column(name = "EMAIL", unique=true)
     private String email;
 
@@ -48,22 +49,28 @@ public class User {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "USER_TYPE_FK")
+    @JoinColumn(name = "USER_TYPE_ID")
     private UserType userType;
 
-    @ManyToMany
-    @JoinColumn(name = "PLACE_FK")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "PLACE_FK")
+    @JoinTable(name = "user_place",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "place_id") })
     private Set<Place> places;
 
-    @ManyToMany
-    @JoinColumn(name = "TRANSACTION_CATEGORY_FK")
-    private Set<TransactionCategory> transactionCategories;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "TRANSACTION_CATEGORY_FK")
+    @JoinTable(name = "user_category",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "category_id") })
+    private Set<Category> transactionCategories;
 
     public User() {
         super();
     }
 
-    public User(@NotNull @Email @Size(max = 50, message = "EmailValidator musi mieć maksymalnie 50 znaków") String email, @NotNull String passwordHash, @NotNull String salt, @NotNull(message = "Imie nie może być puste") @Size(min = 3, max = 20, message = "Imie musi mieć od 3 do 20 znaków") String name, @NotNull(message = "Nazwisko nie może być puste") @Size(min = 3, max = 30, message = "Nazwisko musi mieć od 3 do 30 znaków") String surname, String phoneNumber, @NotNull UserType userType, Set<Place> places, Set<TransactionCategory> transactionCategories) {
+    public User(@NotNull @Email @Size(max = 50, message = "EmailValidator musi mieć maksymalnie 50 znaków") String email, @NotNull String passwordHash, @NotNull String salt, @NotNull(message = "Imie nie może być puste") @Size(min = 3, max = 20, message = "Imie musi mieć od 3 do 20 znaków") String name, @NotNull(message = "Nazwisko nie może być puste") @Size(min = 3, max = 30, message = "Nazwisko musi mieć od 3 do 30 znaków") String surname, String phoneNumber, @NotNull UserType userType, Set<Place> places, Set<Category> transactionCategories) {
         this.email = email;
         this.passwordHash = passwordHash;
         this.salt = salt;
@@ -147,11 +154,11 @@ public class User {
         this.places = places;
     }
 
-    public Set<TransactionCategory> getTransactionCategories() {
+    public Set<Category> getTransactionCategories() {
         return transactionCategories;
     }
 
-    public void setTransactionCategories(Set<TransactionCategory> transactionCategories) {
+    public void setTransactionCategories(Set<Category> transactionCategories) {
         this.transactionCategories = transactionCategories;
     }
 
@@ -166,8 +173,8 @@ public class User {
                 ", surname='" + surname + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", userType=" + userType +
-                ", places=" + places +
-                ", transactionCategories=" + transactionCategories +
+//                ", places=" + places +
+//                ", transactionCategories=" + transactionCategories +
                 '}';
     }
 }

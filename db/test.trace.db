@@ -1,0 +1,176 @@
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE ACCOUNT
+    ADD CONSTRAINT ACCOUNT_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE ACCOUNT
+    ADD CONSTRAINT ACCOUNT_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE Account
+    ADD CONSTRAINT account_user_fk FOREIGN KEY ( user_id )
+        REFERENCES "User" ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE MONTHLY_BUDGET
+    ADD CONSTRAINT MONTHLY_BUDGET_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE MONTHLY_BUDGET
+    ADD CONSTRAINT MONTHLY_BUDGET_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE Monthly_budget
+    ADD CONSTRAINT monthly_budget_user_fk FOREIGN KEY ( user_id )
+        REFERENCES "User" ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE ""Transaction""
+    ADD CONSTRAINT TRANSACTION_ACCOUNT_FK FOREIGN KEY ( ACCOUNT_ID )
+        REFERENCES ACCOUNT ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE ""Transaction""
+    ADD CONSTRAINT TRANSACTION_ACCOUNT_FK FOREIGN KEY ( ACCOUNT_ID )
+        REFERENCES ACCOUNT ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE "Transaction"
+    ADD CONSTRAINT transaction_account_fk FOREIGN KEY ( account_id )
+        REFERENCES account ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE ""Transaction""
+    ADD CONSTRAINT TRANSACTION_PLACE_FK FOREIGN KEY ( PLACE_ID )
+        REFERENCES PLACE ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE ""Transaction""
+    ADD CONSTRAINT TRANSACTION_PLACE_FK FOREIGN KEY ( PLACE_ID )
+        REFERENCES PLACE ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE "Transaction"
+    ADD CONSTRAINT transaction_place_fk FOREIGN KEY ( place_id )
+        REFERENCES place ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE ""Transaction""
+    ADD CONSTRAINT TRANSACTION_TRANSACTION_CATEGORY_FK FOREIGN KEY ( TRANSACTION_CATEGORY_ID )
+        REFERENCES TRANSACTION_CATEGORY ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE ""Transaction""
+    ADD CONSTRAINT TRANSACTION_TRANSACTION_CATEGORY_FK FOREIGN KEY ( TRANSACTION_CATEGORY_ID )
+        REFERENCES TRANSACTION_CATEGORY ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE "Transaction"
+    ADD CONSTRAINT transaction_transaction_category_fk FOREIGN KEY ( transaction_category_id )
+        REFERENCES transaction_category ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE ""Transaction""
+    ADD CONSTRAINT TRANSACTION_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE ""Transaction""
+    ADD CONSTRAINT TRANSACTION_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE "Transaction"
+    ADD CONSTRAINT transaction_user_fk FOREIGN KEY ( user_id )
+        REFERENCES "User" ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE USER_PLACE
+    ADD CONSTRAINT USER_PLACE_PLACE_FK FOREIGN KEY ( PLACE_ID )
+        REFERENCES PLACE ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE USER_PLACE
+    ADD CONSTRAINT USER_PLACE_PLACE_FK FOREIGN KEY ( PLACE_ID )
+        REFERENCES PLACE ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE user_place
+    ADD CONSTRAINT user_place_place_fk FOREIGN KEY ( place_id )
+        REFERENCES place ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE USER_PLACE
+    ADD CONSTRAINT USER_PLACE_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE USER_PLACE
+    ADD CONSTRAINT USER_PLACE_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE user_place
+    ADD CONSTRAINT user_place_user_fk FOREIGN KEY ( user_id )
+        REFERENCES "User" ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE USER_TRANSACTION_CATEGORY
+    ADD CONSTRAINT USER_TRANSACTION_CATEGORY_TRANSACTION_CATEGORY_FK FOREIGN KEY ( TRANSACTION_CATEGORY_ID )
+        REFERENCES TRANSACTION_CATEGORY ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE USER_TRANSACTION_CATEGORY
+    ADD CONSTRAINT USER_TRANSACTION_CATEGORY_TRANSACTION_CATEGORY_FK FOREIGN KEY ( TRANSACTION_CATEGORY_ID )
+        REFERENCES TRANSACTION_CATEGORY ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE user_transaction_category
+    ADD CONSTRAINT user_transaction_category_transaction_category_fk FOREIGN KEY ( transaction_category_id )
+        REFERENCES transaction_category ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE USER_TRANSACTION_CATEGORY
+    ADD CONSTRAINT USER_TRANSACTION_CATEGORY_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE USER_TRANSACTION_CATEGORY
+    ADD CONSTRAINT USER_TRANSACTION_CATEGORY_USER_FK FOREIGN KEY ( USER_ID )
+        REFERENCES ""User"" ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE user_transaction_category
+    ADD CONSTRAINT user_transaction_category_user_fk FOREIGN KEY ( user_id )
+        REFERENCES "User" ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]
+2018-05-12 09:47:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Błąd składniowy w wyrażeniu SQL "ALTER TABLE ""User""
+    ADD CONSTRAINT USER_USER_TYPE_FK FOREIGN KEY ( USER_TYPE_ID )
+        REFERENCES USER_TYPE ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "
+Syntax error in SQL statement "ALTER TABLE ""User""
+    ADD CONSTRAINT USER_USER_TYPE_FK FOREIGN KEY ( USER_TYPE_ID )
+        REFERENCES USER_TYPE ( ID )
+ON DELETE NO ACTION
+    ON UPDATE NO ACTION ENFORCED[*] ENABLE QUERY OPTIMIZATION "; SQL statement:
+ALTER TABLE "User"
+    ADD CONSTRAINT user_user_type_fk FOREIGN KEY ( user_type_id )
+        REFERENCES user_type ( id )
+ON DELETE NO ACTION
+    ON UPDATE no action enforced enable query optimization [42000-197]

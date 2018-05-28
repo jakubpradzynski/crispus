@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import pl.jakubpradzynski.crispus.domain.Place;
 import pl.jakubpradzynski.crispus.dto.PlaceDto;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 import pl.jakubpradzynski.crispus.exceptions.PlaceExistsException;
@@ -74,8 +73,8 @@ public class PlacesController {
         return "redirect:/places";
     }
 
-    @RequestMapping(value = "/place/changeDescription/{id}", method = RequestMethod.POST)
-    public ModelAndView changePlaceDescription(@PathVariable("id") Integer id, @ModelAttribute("editedPlace") @Valid PlaceDto placeDto, Model model, BindingResult result, Errors errors) throws PlaceExistsException {
+    @RequestMapping(value = "/place/changeName/{id}", method = RequestMethod.POST)
+    public ModelAndView changePlaceName(@PathVariable("id") Integer id, @ModelAttribute("editedPlace") @Valid PlaceDto placeDto, Model model, BindingResult result, Errors errors) throws PlaceExistsException {
         SessionUtils.isUserSessionActive(httpSession);
         String username = (String) httpSession.getAttribute("username");
         if (result.hasErrors()) {
@@ -84,7 +83,7 @@ public class PlacesController {
             return new ModelAndView("/place/" + id + "/1", "model", model);
         }
         placeDto.setId(id);
-        Integer newId = placeService.changeUserPlaceDescription(username, placeDto);
+        Integer newId = placeService.changeUserPlaceName(username, placeDto);
         if (newId != -1) id = newId;
         return new ModelAndView("redirect:/place/" + id + "/1");
     }
@@ -115,6 +114,6 @@ public class PlacesController {
     }
 
     private void addErrorsAttributesToModel(Errors errors, Model model) {
-        if (isErrorOccured(errors, "description")) model.addAttribute("invalidPlaceDescription", environment.getProperty("invalid.place.description"));
+        if (isErrorOccured(errors, "name")) model.addAttribute("invalidPlaceName", environment.getProperty("invalid.place.name"));
     }
 }

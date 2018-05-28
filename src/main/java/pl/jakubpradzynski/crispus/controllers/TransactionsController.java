@@ -9,9 +9,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
-import pl.jakubpradzynski.crispus.domain.Transaction;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
-import pl.jakubpradzynski.crispus.dto.TransactionListingDto;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
 import pl.jakubpradzynski.crispus.services.DataService;
 import pl.jakubpradzynski.crispus.services.TransactionService;
@@ -106,12 +104,12 @@ public class TransactionsController {
     private void addAttributesToModel(Model model) {
         List<String> accountNames = dataService.getUserAccountsNames((String) httpSession.getAttribute("username"));
         Collections.sort(accountNames, String.CASE_INSENSITIVE_ORDER);
-        List<String> placesDescriptions = dataService.getPlacesDescriptionsAvailableForUser((String) httpSession.getAttribute("username"));
-        Collections.sort(placesDescriptions, String.CASE_INSENSITIVE_ORDER);
+        List<String> placesNames = dataService.getPlacesNamesAvailableForUser((String) httpSession.getAttribute("username"));
+        Collections.sort(placesNames, String.CASE_INSENSITIVE_ORDER);
         List<String> transactionCategoriesNames = dataService.getTransactionCategoriesNamesAvailableForUser((String) httpSession.getAttribute("username"));
         Collections.sort(transactionCategoriesNames, String.CASE_INSENSITIVE_ORDER);
         model.addAttribute("userAccountsNames", accountNames);
-        model.addAttribute("placesDescriptions", placesDescriptions);
+        model.addAttribute("placesNames", placesNames);
         model.addAttribute("transactionCategoriesNames", transactionCategoriesNames);
     }
 

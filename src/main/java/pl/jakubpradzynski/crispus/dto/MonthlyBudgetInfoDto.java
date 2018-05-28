@@ -16,7 +16,7 @@ public class MonthlyBudgetInfoDto {
 
     private Double amount;
 
-    private Double usedAmount;
+    private @javax.validation.constraints.NotNull Double usedAmount;
 
     private Double difference;
 
@@ -41,7 +41,7 @@ public class MonthlyBudgetInfoDto {
         this.amount = amount;
     }
 
-    public MonthlyBudgetInfoDto(Integer id, String username, Date startDate, Date endDate, Double amount, Double usedAmount, Double difference) {
+    public MonthlyBudgetInfoDto(Integer id, String username, Date startDate, Date endDate, Double amount, @javax.validation.constraints.NotNull Double usedAmount, Double difference) {
         this.id = id;
         this.username = username;
         this.startDate = startDate;
@@ -91,11 +91,11 @@ public class MonthlyBudgetInfoDto {
         this.amount = amount;
     }
 
-    public Double getUsedAmount() {
+    public @javax.validation.constraints.NotNull Double getUsedAmount() {
         return usedAmount;
     }
 
-    public void setUsedAmount(Double usedAmount) {
+    public void setUsedAmount(@javax.validation.constraints.NotNull Double usedAmount) {
         this.usedAmount = usedAmount;
     }
 

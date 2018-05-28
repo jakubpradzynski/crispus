@@ -12,14 +12,15 @@ import java.util.Date;
 public class MonthlyBudget {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "monthly_budget_id_generator")
+    @SequenceGenerator(name="monthly_budget_id_generator", sequenceName="monthly_budget_seq_for_id", initialValue = 1, allocationSize = 1)
     @NotNull
     @Column(name = "ID")
     private Integer id;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "USER_FK")
+    @JoinColumn(name = "USERS_ID")
     private User user;
 
     @NotNull(message = "Data początkowa nie może być pusta")
@@ -31,7 +32,7 @@ public class MonthlyBudget {
     private Date endDate;
 
     @NotNull
-    @Column(name = "AMOUNT")
+    @Column(name = "AMOUNT", columnDefinition = "NUMBER")
     private Double amount;
 
     public MonthlyBudget() {

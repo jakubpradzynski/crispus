@@ -4,13 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.*;
 import pl.jakubpradzynski.crispus.dto.MonthlyBudgetInfoDto;
-import pl.jakubpradzynski.crispus.dto.PlaceDto;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,12 +30,14 @@ public class TransactionRepository {
     private PlaceRepository placeRepository;
 
     @Autowired
-    private TransactionCategoryRepository transactionCategoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Transactional
-    public void createTransaction(String description, User user, Account account, Double value, Date date, Place place, TransactionCategory transactionCategory) {
-        Transaction transaction = new Transaction(description, user, account, value, date, place, transactionCategory);
+    public void createTransaction(String description, User user, Account account, Double value, Date date, Place place, Category category) {
+        Transaction transaction = new Transaction(description, user, account, value, date, place, category);
         accountRepository.updateAccountAfterTransaction(account, value);
+        System.out.println("Jestem tu");
+        System.out.println(transaction.getId());
         entityManager.persist(transaction);
     }
 
@@ -100,8 +100,8 @@ public class TransactionRepository {
                 .setParameter("account", accountRepository.getUserAccountByName(user, transactionDto.getAccountName()))
                 .setParameter("val", transactionDto.getValue())
                 .setParameter("date", format.parse(transactionDto.getDate()))
-                .setParameter("place", !transactionDto.getPlaceDescription().equals("") ? placeRepository.getPlaceByDescription(transactionDto.getPlaceDescription()) : null)
-                .setParameter("category", !transactionDto.getTransactionCategoryName().equals("") ? transactionCategoryRepository.getTransactionCategoryByName(transactionDto.getTransactionCategoryName()) : null)
+                .setParameter("place", !transactionDto.getPlaceName().equals("") ? placeRepository.getPlaceByName(transactionDto.getPlaceName()) : null)
+                .setParameter("category", !transactionDto.getTransactionCategoryName().equals("") ? categoryRepository.getCategoryByName(transactionDto.getTransactionCategoryName()) : null)
                 .setParameter("id", id)
                 .executeUpdate();
     }
@@ -161,9 +161,9 @@ public class TransactionRepository {
                 .executeUpdate();
     }
 
-    public Collection<Transaction> getUserTransactionsAssignedToCategoryInRange(User user, TransactionCategory transactionCategory, Integer start, Integer max) {
-        return entityManager.createQuery("SELECT t FROM TRANSACTION t WHERE t.transactionCategory=:transactionCategory AND t.user=:user ORDER BY t.date DESC", Transaction.class)
-                .setParameter("transactionCategory", transactionCategory)
+    public Collection<Transaction> getUserTransactionsAssignedToCategoryInRange(User user, Category category, Integer start, Integer max) {
+        return entityManager.createQuery("SELECT t FROM TRANSACTION t WHERE t.category=:category AND t.user=:user ORDER BY t.date DESC", Transaction.class)
+                .setParameter("category", category)
                 .setParameter("user", user)
                 .setFirstResult(start)
                 .setMaxResults(max)
@@ -171,16 +171,16 @@ public class TransactionRepository {
     }
 
     @Transactional
-    public void removeCategoryFromTransacitons(User user, TransactionCategory transactionCategory) {
-        entityManager.createQuery("UPDATE TRANSACTION t SET t.transactionCategory=null WHERE t.transactionCategory=:transactionCategory AND t.user=:user")
-                .setParameter("transactionCategory", transactionCategory)
+    public void removeCategoryFromTransacitons(User user, Category category) {
+        entityManager.createQuery("UPDATE TRANSACTION t SET t.category=null WHERE t.category=:category AND t.user=:user")
+                .setParameter("category", category)
                 .setParameter("user", user)
                 .executeUpdate();
     }
 
     @Transactional
-    public void changeCategoryInUserTransactions(User user, TransactionCategory oldCategory, TransactionCategory newCategory) {
-        entityManager.createQuery("UPDATE TRANSACTION t SET t.transactionCategory=:newCategory WHERE t.transactionCategory=:oldCategory AND t.user=:user")
+    public void changeCategoryInUserTransactions(User user, Category oldCategory, Category newCategory) {
+        entityManager.createQuery("UPDATE TRANSACTION t SET t.category=:newCategory WHERE t.category=:oldCategory AND t.user=:user")
                 .setParameter("newCategory", newCategory)
                 .setParameter("oldCategory", oldCategory)
                 .setParameter("user", user)

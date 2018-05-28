@@ -23,13 +23,12 @@ public class TransactionDto {
     @Size(min = 3, max = 30, message = "Nazwa konta musi mieć od 3 do 30 znaków")
     private String accountName;
 
-    @NotNull
-    private Double value;
+    private @NotNull Double value;
 
     @NotNull
     private String date;
 
-    private String placeDescription;
+    private String placeName;
 
     private String transactionCategoryName;
 
@@ -42,8 +41,8 @@ public class TransactionDto {
         transactionDto.accountName = transaction.getAccount().getName();
         transactionDto.value = transaction.getValue();
         transactionDto.date = format.format(transaction.getDate());
-        transactionDto.placeDescription = transaction.getPlace() != null ? transaction.getPlace().getDescription() : null;
-        transactionDto.transactionCategoryName = transaction.getTransactionCategory() != null ? transaction.getTransactionCategory().getName() : null;
+        transactionDto.placeName = transaction.getPlace() != null ? transaction.getPlace().getName() : null;
+        transactionDto.transactionCategoryName = transaction.getCategory() != null ? transaction.getCategory().getName() : null;
         return transactionDto;
     }
 
@@ -54,14 +53,14 @@ public class TransactionDto {
         this.username = username;
     }
 
-    public TransactionDto(@NotNull @Size(min = 1, max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") Integer id, @NotNull @Size(min = 1, max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") String description, @NotNull @Email String username, @NotNull(message = "Nazwa konta nie może być pusta") @Size(min = 3, max = 30, message = "Nazwa konta musi mieć od 3 do 30 znaków") String accountName, @NotNull Double value, @NotNull String date, String placeDescription, String transactionCategoryName) {
+    public TransactionDto(@NotNull @Size(min = 1, max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") Integer id, @NotNull @Size(min = 1, max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") String description, @NotNull @Email String username, @NotNull(message = "Nazwa konta nie może być pusta") @Size(min = 3, max = 30, message = "Nazwa konta musi mieć od 3 do 30 znaków") String accountName, @NotNull Double value, @NotNull String date, String placeName, String transactionCategoryName) {
         this.id = id;
         this.description = description;
         this.username = username;
         this.accountName = accountName;
         this.value = value;
         this.date = date;
-        this.placeDescription = placeDescription;
+        this.placeName = placeName;
         this.transactionCategoryName = transactionCategoryName;
     }
 
@@ -97,11 +96,11 @@ public class TransactionDto {
         this.accountName = accountName;
     }
 
-    public Double getValue() {
+    public @NotNull Double getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(@NotNull Double value) {
         this.value = value;
     }
 
@@ -113,12 +112,12 @@ public class TransactionDto {
         this.date = date;
     }
 
-    public String getPlaceDescription() {
-        return placeDescription;
+    public String getPlaceName() {
+        return placeName;
     }
 
-    public void setPlaceDescription(String placeDescription) {
-        this.placeDescription = placeDescription;
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public String getTransactionCategoryName() {
@@ -138,7 +137,7 @@ public class TransactionDto {
                 ", accountName='" + accountName + '\'' +
                 ", value=" + value +
                 ", date='" + date + '\'' +
-                ", placeDescription='" + placeDescription + '\'' +
+                ", placeName='" + placeName + '\'' +
                 ", transactionCategoryName='" + transactionCategoryName + '\'' +
                 '}';
     }

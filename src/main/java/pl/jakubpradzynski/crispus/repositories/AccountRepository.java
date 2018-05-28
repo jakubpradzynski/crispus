@@ -63,7 +63,7 @@ public class AccountRepository {
     }
 
     @Transactional
-    public void updateAccountAfterTransaction(Account account, Double value) {
+    public void updateAccountAfterTransaction(Account account, @javax.validation.constraints.NotNull Double value) {
         entityManager.createQuery("UPDATE ACCOUNT a SET a.moneyAmount=:val WHERE a.id=:id")
                 .setParameter("val", value + account.getMoneyAmount())
                 .setParameter("id", account.getId())

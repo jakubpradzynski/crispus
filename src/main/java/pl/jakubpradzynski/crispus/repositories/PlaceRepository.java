@@ -1,6 +1,5 @@
 package pl.jakubpradzynski.crispus.repositories;
 
-import org.springframework.core.CollectionFactory;
 import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.Place;
 import pl.jakubpradzynski.crispus.domain.User;
@@ -19,8 +18,8 @@ public class PlaceRepository {
     private EntityManager entityManager;
 
     @Transactional
-    public void createPlace(String description, Set<User> userSet) {
-        Place place = new Place(description, userSet);
+    public void createPlace(String name, Set<User> userSet, Character isPredefined) {
+        Place place = new Place(name, userSet, isPredefined);
         entityManager.persist(place);
     }
 
@@ -33,9 +32,9 @@ public class PlaceRepository {
         return entityManager.find(Place.class, id);
     }
 
-    public Place getPlaceByDescription(String description) {
-        List<Place> places = entityManager.createQuery("SELECT p FROM PLACE p WHERE p.description=:description", Place.class)
-                .setParameter("description", description)
+    public Place getPlaceByName(String name) {
+        List<Place> places = entityManager.createQuery("SELECT p FROM PLACE p WHERE p.name=:name", Place.class)
+                .setParameter("name", name)
                 .getResultList();
         if (places.isEmpty()) {
             return null;
@@ -43,12 +42,12 @@ public class PlaceRepository {
         return places.get(0);
     }
 
-    public Place getPlaceAvailableForUserByDescription(User user, String description) {
+    public Place getPlaceAvailableForUserByName(User user, String name) {
         Collection<Place> places = getAllPreDefinedPlaces();
-        List<Place> filterPlaces =  places.stream().filter(place -> place.getDescription().equals(description)).collect(Collectors.toList());
+        List<Place> filterPlaces =  places.stream().filter(place -> place.getName().equals(name)).collect(Collectors.toList());
         if (!filterPlaces.isEmpty()) return filterPlaces.get(0);
-        return entityManager.createQuery("SELECT p FROM PLACE p WHERE p.description=:description AND p.user=:user", Place.class)
-                .setParameter("description", description)
+        return entityManager.createQuery("SELECT p FROM PLACE p WHERE p.name=:name AND p.user=:user", Place.class)
+                .setParameter("name", name)
                 .setParameter("user", user)
                 .getSingleResult();
 
@@ -60,27 +59,30 @@ public class PlaceRepository {
     }
 
     public Collection<Place> getAllPreDefinedPlaces() {
-        return entityManager.createQuery("SELECT p FROM PLACE p", Place.class)
-                .getResultList().stream().filter(place -> place.getUsers().isEmpty()).collect(Collectors.toSet());
+        return entityManager.createQuery("SELECT p FROM PLACE p WHERE p.isPredefined=:isPredefined", Place.class)
+                .setParameter("isPredefined", 'T')
+                .getResultList();
     }
 
-    public Collection<String> getAllPlacesDescriptionsAvailableForUser(User user) {
+    public Collection<String> getAllPlacesNamesAvailableForUser(User user) {
         Collection<Place> preDefinedPlaces = getAllPreDefinedPlaces();
-        Collection<String> allPlacesDescriptions = new ArrayList<>();
-        preDefinedPlaces.forEach(place -> allPlacesDescriptions.add(place.getDescription()));
+        Collection<String> allPlacesNames = new ArrayList<>();
+        preDefinedPlaces.forEach(place -> allPlacesNames.add(place.getName()));
 
-        Collection<Place> userDefinedPlaces = entityManager.createQuery("SELECT p FROM PLACE p WHERE :user in elements(p.users)", Place.class)
+        Collection<Place> userDefinedPlaces = entityManager.createQuery("SELECT p FROM PLACE p WHERE :user in elements(p.users) AND p.isPredefined=:isPredefined", Place.class)
                 .setParameter("user", user)
+                .setParameter("isPredefined", 'F')
                 .getResultList();
 
-        userDefinedPlaces.forEach(place -> allPlacesDescriptions.add(place.getDescription()));
+        userDefinedPlaces.forEach(place -> allPlacesNames.add(place.getName()));
 
-        return allPlacesDescriptions;
+        return allPlacesNames;
     }
 
     public Integer getUserUsedPlacesNumber(User user) {
-        return entityManager.createQuery("SELECT COUNT(p) FROM PLACE p WHERE :user in elements(p.users) ", Long.class)
+        return entityManager.createQuery("SELECT COUNT(p) FROM PLACE p WHERE :user in elements(p.users) AND p.isPredefined=:isPredefined", Long.class)
                 .setParameter("user", user)
+                .setParameter("isPredefined", 'F')
                 .getSingleResult().intValue();
     }
 
@@ -95,8 +97,9 @@ public class PlaceRepository {
     }
 
     public Collection<Place> getPlaceCreatedByUser(User user) {
-        return entityManager.createQuery("SELECT p FROM PLACE p WHERE :user in elements(p.users)", Place.class)
+        return entityManager.createQuery("SELECT p FROM PLACE p WHERE :user in elements(p.users) AND p.isPredefined=:isPredefined", Place.class)
                 .setParameter("user", user)
+                .setParameter("isPredefined", 'F')
                 .getResultList();
     }
 
@@ -108,9 +111,9 @@ public class PlaceRepository {
     }
 
     @Transactional
-    public void changeUserPlaceDescription(User user, PlaceDto placeDto) {
-        entityManager.createQuery("UPDATE PLACE p SET p.description=:description WHERE p.id=:id AND :user in elements(p.users)")
-                .setParameter("description", placeDto.getDescription())
+    public void changeUserPlaceName(User user, PlaceDto placeDto) {
+        entityManager.createQuery("UPDATE PLACE p SET p.name=:name WHERE p.id=:id AND :user in elements(p.users)")
+                .setParameter("name", placeDto.getName())
                 .setParameter("id", placeDto.getId())
                 .setParameter("user", user)
                 .executeUpdate();

@@ -59,7 +59,7 @@ public class PlaceService {
     @Transactional
     public void addNewUserPlace(String username, PlaceDto placeDto) throws PlaceExistsException {
         User user = userRepository.getUserByEmail(username);
-        Place place = placeRepository.getPlaceByDescription(placeDto.getDescription());
+        Place place = placeRepository.getPlaceByName(placeDto.getName());
         if (place != null) {
             if (place.getUsers().isEmpty()) {
                 throw new PlaceExistsException("Użytkownik nie może tworzyć miejsca, które jest predefiniowane");
@@ -71,7 +71,7 @@ public class PlaceService {
             placeRepository.updatePlace(place);
         } else {
             Set<User> users = new HashSet<>(Arrays.asList(user));
-            placeRepository.createPlace(placeDto.getDescription(), users);
+            placeRepository.createPlace(placeDto.getName(), users, 'F');
         }
     }
 
@@ -102,13 +102,13 @@ public class PlaceService {
     }
 
     @Transactional
-    public Integer changeUserPlaceDescription(String username, PlaceDto placeDto) throws PlaceExistsException {
+    public Integer changeUserPlaceName(String username, PlaceDto placeDto) throws PlaceExistsException {
         User user = userRepository.getUserByEmail(username);
         Place oldPlace = placeRepository.getPlaceById(placeDto.getId());
-        Place newPlace = placeRepository.getPlaceByDescription(placeDto.getDescription());
+        Place newPlace = placeRepository.getPlaceByName(placeDto.getName());
         if (oldPlace.getUsers().size() == 1) {
             if (newPlace == null) {
-                placeRepository.changeUserPlaceDescription(user, placeDto);
+                placeRepository.changeUserPlaceName(user, placeDto);
                 return -1;
             } else if (newPlace.getUsers().contains(user)) {
                 throw new PlaceExistsException("Nie możesz zmienić nazwę miejsca na nazwę już istniejącego!");
@@ -121,8 +121,8 @@ public class PlaceService {
             }
         } else {
             if (newPlace == null) {
-                placeRepository.createPlace(placeDto.getDescription(), new HashSet<>(Arrays.asList(user)));
-                Place createdPlace = placeRepository.getPlaceByDescription(placeDto.getDescription());
+                placeRepository.createPlace(placeDto.getName(), new HashSet<>(Arrays.asList(user)), 'F');
+                Place createdPlace = placeRepository.getPlaceByName(placeDto.getName());
                 transactionRepository.changePlaceInUserTransactions(user, oldPlace, createdPlace);
                 oldPlace.getUsers().remove(user);
                 placeRepository.updatePlace(oldPlace);

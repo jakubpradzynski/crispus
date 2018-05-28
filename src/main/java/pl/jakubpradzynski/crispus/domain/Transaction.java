@@ -1,7 +1,6 @@
 package pl.jakubpradzynski.crispus.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -11,53 +10,54 @@ import java.util.Date;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_generator")
+    @SequenceGenerator(name="transaction_id_generator", sequenceName="transaction_seq_for_id", initialValue = 1, allocationSize = 1)
     @NotNull
     @Column(name = "ID")
     private Integer id;
 
     @NotNull
     @Size(min = 1, max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków")
-    @Column(name = "DESCRIPTION")
+    @Column(name = "T_DESCRIPTION")
     private String description;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "USER_FK")
+    @JoinColumn(name = "USERS_ID")
     private User user;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "ACCOUNT_FK")
+    @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
 
     @NotNull
-    @Column(name = "VALUE")
+    @Column(name = "T_VALUE", columnDefinition = "NUMBER")
     private Double value;
 
     @NotNull
-    @Column(name = "DATE")
+    @Column(name = "T_DATE")
     private Date date;
 
     @ManyToOne
-    @JoinColumn(name = "PLACE_FK")
+    @JoinColumn(name = "PLACE_ID")
     private Place place;
 
     @ManyToOne
-    @JoinColumn(name = "TRANSACTION_CATEGORY_FK")
-    private TransactionCategory transactionCategory;
+    @JoinColumn(name = "CATEGORY_ID")
+    private Category category;
 
     public Transaction() {
     }
 
-    public Transaction(@Size(max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") String description, @NotNull User user, @NotNull Account account, @NotNull Double value, @NotNull Date date, Place place, TransactionCategory transactionCategory) {
+    public Transaction(@Size(max = 250, message = "Opis transakcji może mieć maksymalnie 250 znaków") String description, @NotNull User user, @NotNull Account account, @NotNull Double value, @NotNull Date date, Place place, Category category) {
         this.description = description;
         this.user = user;
         this.account = account;
         this.value = value;
         this.date = date;
         this.place = place;
-        this.transactionCategory = transactionCategory;
+        this.category = category;
     }
 
     public Integer getId() {
@@ -116,12 +116,12 @@ public class Transaction {
         this.place = place;
     }
 
-    public TransactionCategory getTransactionCategory() {
-        return transactionCategory;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setTransactionCategory(TransactionCategory transactionCategory) {
-        this.transactionCategory = transactionCategory;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override
@@ -133,8 +133,8 @@ public class Transaction {
                 ", account=" + account +
                 ", value=" + value +
                 ", date=" + date +
-                ", place.html=" + place +
-                ", transactionCategory=" + transactionCategory +
+                ", place=" + place +
+                ", category=" + category +
                 '}';
     }
 }

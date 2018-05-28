@@ -9,14 +9,15 @@ import javax.validation.constraints.Size;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_generator")
+    @SequenceGenerator(name="account_id_generator", sequenceName="account_seq_for_id", initialValue = 1, allocationSize = 1)
     @Column(name = "ID")
     @NotNull
     private Integer id;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "USER_FK")
+    @JoinColumn(name = "USERS_ID")
     private User user;
 
     @NotNull(message = "Nazwa konta nie może być pusta")
@@ -25,7 +26,7 @@ public class Account {
     private String name;
 
     @NotNull(message = "Kwota na koncie nie może być pusta")
-    @Column(name = "MONEY_AMOUNT")
+    @Column(name = "MONEY_AMOUNT", columnDefinition = "NUMBER")
     private Double moneyAmount;
 
     public Account() {

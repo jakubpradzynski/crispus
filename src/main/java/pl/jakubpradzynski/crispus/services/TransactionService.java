@@ -8,10 +8,7 @@ import pl.jakubpradzynski.crispus.repositories.*;
 import pl.jakubpradzynski.crispus.utils.DateUtils;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,7 +27,7 @@ public class TransactionService {
     PlaceRepository placeRepository;
 
     @Autowired
-    TransactionCategoryRepository transactionCategoryRepository;
+    CategoryRepository categoryRepository;
 
     @Transactional
     public void addNewUserTransaction(TransactionDto transactionDto) throws ParseException {
@@ -41,8 +38,8 @@ public class TransactionService {
                 accountRepository.getUserAccountByName(user, transactionDto.getAccountName()),
                 transactionDto.getValue(),
                 DateUtils.stringToDate(transactionDto.getDate(), "yyyy-MM-dd"),
-                !transactionDto.getPlaceDescription().equals("") ? placeRepository.getPlaceByDescription(transactionDto.getPlaceDescription()) : null,
-                !transactionDto.getTransactionCategoryName().equals("") ? transactionCategoryRepository.getTransactionCategoryByName(transactionDto.getTransactionCategoryName()) : null
+                !transactionDto.getPlaceName().equals("") ? placeRepository.getPlaceByName(transactionDto.getPlaceName()) : null,
+                !transactionDto.getTransactionCategoryName().equals("") ? categoryRepository.getCategoryByName(transactionDto.getTransactionCategoryName()) : null
         );
     }
 

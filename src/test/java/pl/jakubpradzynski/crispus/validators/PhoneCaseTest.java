@@ -3,7 +3,6 @@ package pl.jakubpradzynski.crispus.validators;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
@@ -14,8 +13,6 @@ import javax.validation.ValidatorFactory;
 
 import org.junit.Before;
 import org.junit.Test;
-import pl.jakubpradzynski.crispus.domain.Place;
-import pl.jakubpradzynski.crispus.domain.TransactionCategory;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.domain.UserType;
 

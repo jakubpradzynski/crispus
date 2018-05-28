@@ -11,25 +11,25 @@ public class PlaceDto implements Comparable<PlaceDto> {
 
     @NotNull(message = "Opis miejsca nie może być pusta")
     @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków")
-    private String description;
+    private String name;
 
-    private boolean isPreDefined;
+    private Character isPreDefined;
 
     public static PlaceDto fromPlace(Place place) {
-        return new PlaceDto(place.getId(), place.getDescription(), place.getUsers().isEmpty());
+        return new PlaceDto(place.getId(), place.getName(), place.getPredefined());
     }
 
     public PlaceDto() {
     }
 
-    public PlaceDto(Integer id, @NotNull(message = "Opis miejsca nie może być pusta") @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków") String description) {
+    public PlaceDto(Integer id, @NotNull(message = "Opis miejsca nie może być pusta") @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków") String name) {
         this.id = id;
-        this.description = description;
+        this.name = name;
     }
 
-    public PlaceDto(Integer id, @NotNull(message = "Opis miejsca nie może być pusta") @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków") String description, boolean isPreDefined) {
+    public PlaceDto(Integer id, @NotNull(message = "Opis miejsca nie może być pusta") @Size(min = 3, max = 50, message = "Opis miejsca musi mieć od 3 do 50 znaków") String name, Character isPreDefined) {
         this.id = id;
-        this.description = description;
+        this.name = name;
         this.isPreDefined = isPreDefined;
     }
 
@@ -41,19 +41,19 @@ public class PlaceDto implements Comparable<PlaceDto> {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public boolean isPreDefined() {
+    public Character isPreDefined() {
         return isPreDefined;
     }
 
-    public void setPreDefined(boolean preDefined) {
+    public void setPreDefined(Character preDefined) {
         isPreDefined = preDefined;
     }
 
@@ -61,13 +61,13 @@ public class PlaceDto implements Comparable<PlaceDto> {
     public String toString() {
         return "PlaceDto{" +
                 "id=" + id +
-                ", description='" + description + '\'' +
+                ", name='" + name + '\'' +
                 ", isPreDefined=" + isPreDefined +
                 '}';
     }
 
     @Override
     public int compareTo(PlaceDto o) {
-        return this.description.compareToIgnoreCase(o.description);
+        return this.name.compareToIgnoreCase(o.name);
     }
 }

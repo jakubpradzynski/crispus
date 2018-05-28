@@ -2,10 +2,10 @@ package pl.jakubpradzynski.crispus.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.jakubpradzynski.crispus.domain.Category;
 import pl.jakubpradzynski.crispus.dto.UserDto;
 import pl.jakubpradzynski.crispus.dto.UserLoginDto;
 import pl.jakubpradzynski.crispus.domain.Place;
-import pl.jakubpradzynski.crispus.domain.TransactionCategory;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.exceptions.EmailExistsException;
 import pl.jakubpradzynski.crispus.exceptions.HashGenerationException;
@@ -13,6 +13,7 @@ import pl.jakubpradzynski.crispus.repositories.*;
 import pl.jakubpradzynski.crispus.utils.HashUtils;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class UserService {
     private PlaceRepository placeRepository;
 
     @Autowired
-    private TransactionCategoryRepository transactionCategoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -58,8 +59,8 @@ public class UserService {
                     accountDto.getSurname(),
                     accountDto.getPhoneNumber(),
                     userTypeRepository.getUserTypeByName("normal"),
-                    (Set<Place>)placeRepository.getAllPreDefinedPlaces(),
-                    (Set<TransactionCategory>)transactionCategoryRepository.getAllPreDefinedTransactionCategories()
+                    new HashSet<Place>(placeRepository.getAllPreDefinedPlaces()),
+                    new HashSet<Category>(categoryRepository.getAllPreDefinedCategories())
             );
         } catch (HashGenerationException e) {
             e.printStackTrace();
