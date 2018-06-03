@@ -95,7 +95,7 @@ public class TransactionRepository {
     public void updateTransaction(Integer id, TransactionDto transactionDto) throws ParseException {
         User user = userRepository.getUserByEmail(transactionDto.getUsername());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        entityManager.createQuery("UPDATE TRANSACTION t SET t.description=:description, t.account=:account, t.value=:val, t.date=:date, t.place=:place, t.transactionCategory=:category WHERE t.id=:id")
+        entityManager.createQuery("UPDATE TRANSACTION t SET t.description=:description, t.account=:account, t.value=:val, t.date=:date, t.place=:place, t.category=:category WHERE t.id=:id")
                 .setParameter("description", transactionDto.getDescription())
                 .setParameter("account", accountRepository.getUserAccountByName(user, transactionDto.getAccountName()))
                 .setParameter("val", transactionDto.getValue())

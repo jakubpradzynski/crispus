@@ -6,9 +6,10 @@ import javax.servlet.http.HttpSession;
 
 public class SessionUtils {
 
-    public static void isUserSessionActive(HttpSession httpSession) throws SessionExpiredException {
+    public static boolean isUserSessionActive(HttpSession httpSession) throws SessionExpiredException {
         if (httpSession.getAttribute("username") == null) {
             throw new SessionExpiredException("Sesja wygasła!");
         }
+        return true;
     }
 }

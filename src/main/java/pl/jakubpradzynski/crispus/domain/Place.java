@@ -22,7 +22,6 @@ public class Place {
     private String name; // TODO change to name
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "USER_FK")
     @JoinTable(name = "user_place",
             joinColumns = { @JoinColumn(name = "place_id") },
             inverseJoinColumns = { @JoinColumn(name = "user_id") })

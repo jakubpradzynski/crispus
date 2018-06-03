@@ -12,28 +12,24 @@ import pl.jakubpradzynski.crispus.dto.MonthlyBudgetInfoDto;
 import pl.jakubpradzynski.crispus.dto.NewMonthlyBudgetDto;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
 import pl.jakubpradzynski.crispus.services.MonthlyBudgetService;
-import pl.jakubpradzynski.crispus.utils.DateUtils;
 import pl.jakubpradzynski.crispus.utils.SessionUtils;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 @Controller
 public class BudgetsController {
 
     @Autowired
-    HttpSession httpSession;
+    private HttpSession httpSession;
 
     @Autowired
-    MonthlyBudgetService monthlyBudgetService;
+    private MonthlyBudgetService monthlyBudgetService;
 
     @RequestMapping(value = "/budgets", method = RequestMethod.GET)
-    public ModelAndView showBudgets(Model model) throws SessionExpiredException, ParseException {
+    public ModelAndView showBudgets(Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
         addAttributesToModel(model);
         return new ModelAndView("budgets", "model", model);
@@ -66,7 +62,7 @@ public class BudgetsController {
         return new ModelAndView("budget", "model", model);
     }
 
-    private void addAttributesToModel(Model model) throws ParseException {
+    private void addAttributesToModel(Model model) {
         String username = (String) httpSession.getAttribute("username");
         MonthlyBudgetInfoDto actualBudget = monthlyBudgetService.getUserActualMonthlyBudgetDto(username);
         List<MonthlyBudgetInfoDto> lastBudgets = monthlyBudgetService.getUserLastMonthlyBudgetsDto(username);

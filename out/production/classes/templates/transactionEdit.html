@@ -52,7 +52,7 @@
             <input th:field="*{id}" th:value="${param.id}" th:hidden="true">
             <div class="row">
                 <div class="col-sm-12">
-                    <input th:field="*{name}" type="text" class="form-control" th:placeholder="*{name}">
+                    <input th:field="*{description}" type="text" class="form-control" th:placeholder="*{description}">
                     <p class="text-danger text-center"><th:block th:if="${invalidDescription} != null" th:text="${invalidDescription}"/></p>
                 </div>
             </div>

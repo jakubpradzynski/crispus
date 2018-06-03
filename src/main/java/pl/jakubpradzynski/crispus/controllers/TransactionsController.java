@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
@@ -57,7 +56,7 @@ public class TransactionsController {
     @RequestMapping(value = "/transaction/add", method = RequestMethod.POST)
     public ModelAndView addNewTransaction
             (@ModelAttribute("newTransactionDto") @Valid TransactionDto transactionDto,
-             BindingResult result, WebRequest request, Errors errors, Model model) throws Exception {
+             BindingResult result, Errors errors, Model model) throws Exception {
 
         if (!result.hasErrors()) {
             transactionService.addNewUserTransaction(transactionDto);
@@ -90,7 +89,7 @@ public class TransactionsController {
     }
 
     @RequestMapping(value = "/transaction/edit", method = RequestMethod.POST)
-    public ModelAndView editTransactionById(@ModelAttribute("transaction") @Valid TransactionDto transactionDto, BindingResult result, WebRequest request, Errors errors, Model model) throws SessionExpiredException, ParseException {
+    public ModelAndView editTransactionById(@ModelAttribute("transaction") @Valid TransactionDto transactionDto, BindingResult result, Errors errors, Model model) throws SessionExpiredException, ParseException {
         SessionUtils.isUserSessionActive(httpSession);
         if (result.hasErrors()) {
             addErrorsAttributesToModel(errors, model);
@@ -121,8 +120,8 @@ public class TransactionsController {
     }
 
     private void addErrorsAttributesToModel(Errors errors, Model model) {
-        if (isErrorOccured(errors, "value")) model.addAttribute("invalidValue", environment.getProperty("invalid.value"));
-        if (isErrorOccured(errors, "description")) model.addAttribute("invalidDescription", environment.getProperty("invalid.description"));
+        if (isErrorOccured(errors, "value")) model.addAttribute("invalidValue", environment.getProperty("Niepoprawna kwota transakcji!"));
+        if (isErrorOccured(errors, "description")) model.addAttribute("invalidDescription", environment.getProperty("Niepoprawny opis transakcji!"));
     }
 
 }

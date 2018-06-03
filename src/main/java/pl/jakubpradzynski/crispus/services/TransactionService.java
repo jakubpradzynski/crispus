@@ -15,19 +15,19 @@ import java.util.List;
 public class TransactionService {
 
     @Autowired
-    TransactionRepository transactionRepository;
+    private TransactionRepository transactionRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
-    PlaceRepository placeRepository;
+    private PlaceRepository placeRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Transactional
     public void addNewUserTransaction(TransactionDto transactionDto) throws ParseException {

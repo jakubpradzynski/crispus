@@ -21,6 +21,10 @@ public class NewMonthlyBudgetDto {
     public NewMonthlyBudgetDto() {
     }
 
+    public NewMonthlyBudgetDto(@NotNull(message = "Kwota nie może być pusta") @Min(value = 1, message = "Kwota musi być dodatnia") Double amount) {
+        this.amount = amount;
+    }
+
     public NewMonthlyBudgetDto(String username, @NotNull(message = "Data początkowa nie może być pusta") String startDate, @NotNull(message = "Data końcowa nie może być pusta") String endDate, @NotNull(message = "Kwota nie może być pusta") @Min(value = 1, message = "Kwota musi być dodatnia") Double amount) {
         this.username = username;
         this.startDate = startDate;

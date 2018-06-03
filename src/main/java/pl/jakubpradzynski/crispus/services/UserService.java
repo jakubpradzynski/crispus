@@ -15,7 +15,6 @@ import pl.jakubpradzynski.crispus.utils.HashUtils;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 @Service
 public class UserService {
@@ -84,22 +83,22 @@ public class UserService {
         return false;
     }
 
-    private boolean isPasswordValid(UserLoginDto userLoginDto) throws HashGenerationException {
+    protected boolean isPasswordValid(UserLoginDto userLoginDto) throws HashGenerationException {
         User user = userRepository.getUserByEmail(userLoginDto.getLogin());
         if (hashPasswordWithSalt(userLoginDto.getPassword(), user.getSalt()).equals(user.getPasswordHash())) return true;
         return false;
     }
 
-    private boolean emailExist(String email) {
+    protected boolean emailExist(String email) {
         User user = userRepository.getUserByEmail(email);
         return user != null;
     }
 
-    private String generateSalt() {
+    protected String generateSalt() {
         final String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
-        while (salt.length() < 20) { // length of the random string.
+        while (salt.length() < 20) {
             int index = (int) (rnd.nextFloat() * SALTCHARS.length());
             salt.append(SALTCHARS.charAt(index));
         }
@@ -107,7 +106,7 @@ public class UserService {
         return saltStr;
     }
 
-    private String hashPasswordWithSalt(String password, String salt) throws HashGenerationException {
+    protected String hashPasswordWithSalt(String password, String salt) throws HashGenerationException {
         return hashUtils.generateMD5(password + salt);
     }
 }

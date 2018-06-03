@@ -29,13 +29,13 @@ import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
 public class CategoriesController {
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Autowired
-    HttpSession httpSession;
+    private HttpSession httpSession;
 
     @Autowired
-    Environment environment;
+    private Environment environment;
 
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     public ModelAndView showCategories(Model model) throws SessionExpiredException {
@@ -114,6 +114,6 @@ public class CategoriesController {
     }
 
     private void addErrorsAttributesToModel(Errors errors, Model model) {
-        if (isErrorOccured(errors, "name")) model.addAttribute("invalidCategoryName", environment.getProperty("invalid.category.name"));
+        if (isErrorOccured(errors, "name")) model.addAttribute("invalidCategoryName", environment.getProperty("Niepoprawna nazwa kategorii!"));
     }
 }

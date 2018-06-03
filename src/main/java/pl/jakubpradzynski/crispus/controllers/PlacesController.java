@@ -29,13 +29,13 @@ import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
 public class PlacesController {
 
     @Autowired
-    PlaceService placeService;
+    private PlaceService placeService;
 
     @Autowired
-    HttpSession httpSession;
+    private HttpSession httpSession;
 
     @Autowired
-    Environment environment;
+    private Environment environment;
 
     @RequestMapping(value = "/places", method = RequestMethod.GET)
     public ModelAndView showPlaces(Model model) throws SessionExpiredException {
@@ -114,6 +114,6 @@ public class PlacesController {
     }
 
     private void addErrorsAttributesToModel(Errors errors, Model model) {
-        if (isErrorOccured(errors, "name")) model.addAttribute("invalidPlaceName", environment.getProperty("invalid.place.name"));
+        if (isErrorOccured(errors, "name")) model.addAttribute("invalidPlaceName", environment.getProperty("Niepoprawna nazwa miejsca!"));
     }
 }

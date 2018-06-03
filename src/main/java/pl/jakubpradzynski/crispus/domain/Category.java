@@ -1,10 +1,8 @@
 package pl.jakubpradzynski.crispus.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 
 @Entity(name = "CATEGORY")
@@ -24,7 +22,6 @@ public class Category {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "USER_FK")
     @JoinTable(name = "user_category",
             joinColumns = { @JoinColumn(name = "category_id") },
             inverseJoinColumns = { @JoinColumn(name = "user_id") })

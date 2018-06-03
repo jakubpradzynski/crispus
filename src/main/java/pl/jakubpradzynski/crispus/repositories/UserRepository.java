@@ -7,7 +7,6 @@ import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.domain.UserType;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Collection;

@@ -23,7 +23,8 @@ public class TransactionDto {
     @Size(min = 3, max = 30, message = "Nazwa konta musi mieć od 3 do 30 znaków")
     private String accountName;
 
-    private @NotNull Double value;
+    @NotNull
+    private Double value;
 
     @NotNull
     private String date;

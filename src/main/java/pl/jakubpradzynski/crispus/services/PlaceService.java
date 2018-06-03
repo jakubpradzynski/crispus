@@ -20,16 +20,16 @@ import java.util.*;
 public class PlaceService {
 
     @Autowired
-    PlaceRepository placeRepository;
+    private PlaceRepository placeRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    UserTypeRepository userTypeRepository;
+    private UserTypeRepository userTypeRepository;
 
     @Autowired
-    TransactionRepository transactionRepository;
+    private TransactionRepository transactionRepository;
 
     public Integer getUserUsedPlacesNumber(String username) {
         User user = userRepository.getUserByEmail(username);
@@ -61,7 +61,7 @@ public class PlaceService {
         User user = userRepository.getUserByEmail(username);
         Place place = placeRepository.getPlaceByName(placeDto.getName());
         if (place != null) {
-            if (place.getUsers().isEmpty()) {
+            if (place.getPredefined().equals('T')) {
                 throw new PlaceExistsException("Użytkownik nie może tworzyć miejsca, które jest predefiniowane");
             }
             if (place.getUsers().contains(user)) {

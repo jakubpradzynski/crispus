@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,13 +30,13 @@ import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
 public class AccountsController {
 
     @Autowired
-    HttpSession httpSession;
+    private HttpSession httpSession;
 
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @Autowired
-    DataService dataService;
+    private DataService dataService;
 
     @Autowired
     private Environment environment;
@@ -51,7 +49,7 @@ public class AccountsController {
     }
 
     @RequestMapping(value = "/account/edit", method = RequestMethod.POST)
-    public ModelAndView editAccountName(@ModelAttribute("newAccountName") @Valid ChangeAccountNameDto changeAccountNameDto, BindingResult result, Model model, Errors errors) throws SessionExpiredException {
+    public ModelAndView editAccountName(@ModelAttribute("newAccountName") @Valid ChangeAccountNameDto changeAccountNameDto, BindingResult result, Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
         if (result.hasErrors()) {
             model.addAttribute("errors");
@@ -103,8 +101,8 @@ public class AccountsController {
     }
 
     private void addErrorsAttributesToModel(Errors errors, Model model) {
-        if (isErrorOccured(errors, "name")) model.addAttribute("invalidAccountName", environment.getProperty("invalid.account.name"));
-        if (isErrorOccured(errors, "moneyAmount")) model.addAttribute("invalidAccountAmount", environment.getProperty("invalid.account.amount"));
-        if (isErrorOccured(errors, "username")) model.addAttribute("usernameError", environment.getProperty("error.with.username"));
+        if (isErrorOccured(errors, "name")) model.addAttribute("invalidAccountName", environment.getProperty("Niepoprawna nazwa konta!"));
+        if (isErrorOccured(errors, "moneyAmount")) model.addAttribute("invalidAccountAmount", environment.getProperty("Niepoprawna kwota na koncie!"));
+        if (isErrorOccured(errors, "username")) model.addAttribute("usernameError", environment.getProperty("Wystąpił jakiś błąd z nazwą użytkownika!"));
     }
 }

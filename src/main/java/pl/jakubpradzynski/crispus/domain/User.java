@@ -53,14 +53,12 @@ public class User {
     private UserType userType;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "PLACE_FK")
     @JoinTable(name = "user_place",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "place_id") })
     private Set<Place> places;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "TRANSACTION_CATEGORY_FK")
     @JoinTable(name = "user_category",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "category_id") })

@@ -13,22 +13,22 @@ import java.util.List;
 public class DataService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    PlaceRepository placeRepository;
+    private PlaceRepository placeRepository;
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    TransactionRepository transactionRepository;
+    private TransactionRepository transactionRepository;
 
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     public PublicUserData getPublicUserData(String username) {
         User user = userRepository.getUserByEmail(username);

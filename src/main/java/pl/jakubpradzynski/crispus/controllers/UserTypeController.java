@@ -14,10 +14,10 @@ import javax.servlet.http.HttpSession;
 public class UserTypeController {
 
     @Autowired
-    HttpSession httpSession;
+    private HttpSession httpSession;
 
     @Autowired
-    UserTypeService userTypeService;
+    private UserTypeService userTypeService;
 
     @RequestMapping(value = "/premium", method = RequestMethod.GET)
     public String premium() throws SessionExpiredException {

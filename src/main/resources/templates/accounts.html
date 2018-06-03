@@ -44,7 +44,7 @@
 </nav>
 <div class="container">
     <div class="login-panel">
-        <p th:if="${errors} != null" class="text-center text-danger" th:text="#{standard.error.message}"></p>
+        <p th:if="${errors} != null" class="text-center text-danger" th:text="Coś poszło nie tak!"></p>
         <h1 class="text-center">Konta</h1>
         <p class="text-center font-size">Wykorzystane konta: <span class="text-danger font-weight-bold">
         <p th:utext="${usedAccounts}" th:remove="tag"></p></span> z <p th:text="${availableAccounts}"

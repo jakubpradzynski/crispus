@@ -10,7 +10,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
@@ -52,7 +51,7 @@ public class HomepageController {
     @RequestMapping(value = "/homepage", method = RequestMethod.POST)
     public ModelAndView addNewTransaction
             (@ModelAttribute("newTransactionDto") @Valid TransactionDto transactionDto,
-             BindingResult result, WebRequest request, Errors errors, Model model) throws Exception {
+             BindingResult result, Errors errors, Model model) throws Exception {
 
         if (!result.hasErrors()) {
             transactionService.addNewUserTransaction(transactionDto);
@@ -83,8 +82,8 @@ public class HomepageController {
     }
 
     private void addErrorsAttributesToModel(Errors errors, Model model) {
-        if (isErrorOccured(errors, "value")) model.addAttribute("invalidValue", environment.getProperty("invalid.value"));
-        if (isErrorOccured(errors, "description")) model.addAttribute("invalidDescription", environment.getProperty("invalid.description"));
+        if (isErrorOccured(errors, "value")) model.addAttribute("invalidValue", environment.getProperty("Niepoprawna kwota transakcji!"));
+        if (isErrorOccured(errors, "description")) model.addAttribute("invalidDescription", environment.getProperty("Niepoprawny opis transakcji!"));
     }
 
 }

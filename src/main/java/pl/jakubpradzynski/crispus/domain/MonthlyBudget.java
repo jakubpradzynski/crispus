@@ -1,10 +1,7 @@
 package pl.jakubpradzynski.crispus.domain;
 
-import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity(name = "MONTHLY_BUDGET")

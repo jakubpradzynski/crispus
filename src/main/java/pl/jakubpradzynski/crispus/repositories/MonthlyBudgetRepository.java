@@ -3,7 +3,6 @@ package pl.jakubpradzynski.crispus.repositories;
 import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.*;
 import pl.jakubpradzynski.crispus.dto.MonthlyBudgetInfoDto;
-import pl.jakubpradzynski.crispus.utils.DateUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

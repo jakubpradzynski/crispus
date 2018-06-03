@@ -14,7 +14,6 @@ import pl.jakubpradzynski.crispus.repositories.UserRepository;
 import pl.jakubpradzynski.crispus.utils.DateUtils;
 
 import javax.transaction.Transactional;
-import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,13 +24,13 @@ import java.util.List;
 public class MonthlyBudgetService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    MonthlyBudgetRepository monthlyBudgetRepository;
+    private MonthlyBudgetRepository monthlyBudgetRepository;
 
     @Autowired
-    TransactionRepository transactionRepository;
+    private TransactionRepository transactionRepository;
 
     public MonthlyBudgetInfoDto getUserActualMonthlyBudgetDto(String username) {
         User user = userRepository.getUserByEmail(username);
@@ -54,8 +53,9 @@ public class MonthlyBudgetService {
         return sortMonthlyBudgetInfoDtos(monthlyBudgetInfoDtoList);
     }
 
-    private List<MonthlyBudgetInfoDto> sortMonthlyBudgetInfoDtos(List<MonthlyBudgetInfoDto> monthlyBudgetInfoDtoList) {
+    protected List<MonthlyBudgetInfoDto> sortMonthlyBudgetInfoDtos(List<MonthlyBudgetInfoDto> monthlyBudgetInfoDtoList) {
         monthlyBudgetInfoDtoList.sort(Comparator.comparing(o -> o.getStartDate()));
+        Collections.reverse(monthlyBudgetInfoDtoList);
         return monthlyBudgetInfoDtoList;
     }
 
