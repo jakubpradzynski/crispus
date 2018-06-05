@@ -22,6 +22,13 @@ import java.util.List;
 
 import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
 
+/**
+ * A controller-type class for handling transaction-related requests.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Controller
 public class TransactionsController {
 
@@ -37,6 +44,14 @@ public class TransactionsController {
     @Autowired
     private DataService dataService;
 
+    /**
+     * Method supports request GET for a path "/transactions/{id}".
+     * Shows user transactions page after added necessary data about transactions to model.
+     * @param id - transactions range
+     * @param model - Model from MVC
+     * @return Model and View (transactions.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/transactions/{id}", method = RequestMethod.GET)
     public ModelAndView showTransactions(@PathVariable("id") Integer id, Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -46,6 +61,13 @@ public class TransactionsController {
         return new ModelAndView("transactions", "model", model);
     }
 
+    /**
+     * Method supports request GET for a path "/transaction".
+     * Shows info about user transaction specific by id.
+     * @param id - transaction id
+     * @return Model and View (transaction.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/transaction", method = RequestMethod.GET)
     public ModelAndView showTransactionById(@RequestParam("id") Integer id) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -53,10 +75,20 @@ public class TransactionsController {
         return new ModelAndView("transaction", "transaction", transactionDto);
     }
 
+    /**
+     * Method supports request POST for a path "/transaction/add".
+     * Validates data from the user and, depending on the result, add new user transactions or returns an error.
+     * @param transactionDto - transaction data from user
+     * @param result - BindingResult
+     * @param errors - Errors
+     * @param model - Model from MVC
+     * @return Model and View (transactions.html)
+     * @throws ParseException - Exception is thrown when it is impossible to parse the date from the string.
+     */
     @RequestMapping(value = "/transaction/add", method = RequestMethod.POST)
     public ModelAndView addNewTransaction
             (@ModelAttribute("newTransactionDto") @Valid TransactionDto transactionDto,
-             BindingResult result, Errors errors, Model model) throws Exception {
+             BindingResult result, Errors errors, Model model) throws ParseException {
 
         if (!result.hasErrors()) {
             transactionService.addNewUserTransaction(transactionDto);
@@ -72,6 +104,14 @@ public class TransactionsController {
         return new ModelAndView("redirect:/transactions/1");
     }
 
+    /**
+     * Method supports request GET for a path "/transaction/edit/{id}".
+     * Shows edit page for transaction specific by id.
+     * @param id - transaction id
+     * @param model - Model from MVC
+     * @return Model and View (transactionEdit.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/transaction/edit/{id}", method = RequestMethod.GET)
     public ModelAndView showEditTransactionById(@PathVariable("id") Integer id, Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -81,6 +121,13 @@ public class TransactionsController {
         return new ModelAndView("transactionEdit", "model", model);
     }
 
+    /**
+     * Method supports request GET for a path "/transaction/remove/{id}".
+     * Remove user transaction specific by id.
+     * @param id - transaction id
+     * @return String (homepage.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/transaction/remove/{id}", method = RequestMethod.GET)
     public String removeTransaction(@PathVariable("id") Integer id) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -88,6 +135,17 @@ public class TransactionsController {
         return "redirect:/homepage";
     }
 
+    /**
+     * Method supports request POST for a path "/transaction/edit".
+     * Validates data from the user and, depending on the result, edit user transaction or returns an error.
+     * @param transactionDto - new transaction data
+     * @param result - BindingResult
+     * @param errors - Errors
+     * @param model - Model from MVC
+     * @return Model and View (transaction.html when transaction was edited and transactionEdit.html otherwise)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     * @throws ParseException - Exception is thrown when it is impossible to parse the date from the string.
+     */
     @RequestMapping(value = "/transaction/edit", method = RequestMethod.POST)
     public ModelAndView editTransactionById(@ModelAttribute("transaction") @Valid TransactionDto transactionDto, BindingResult result, Errors errors, Model model) throws SessionExpiredException, ParseException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -100,6 +158,10 @@ public class TransactionsController {
         return new ModelAndView("redirect:/transaction?id=" + transactionDto.getId());
     }
 
+    /**
+     * Adds necessary attributes about user transactions to model.
+     * @param model - Model from MVC
+     */
     private void addAttributesToModel(Model model) {
         List<String> accountNames = dataService.getUserAccountsNames((String) httpSession.getAttribute("username"));
         Collections.sort(accountNames, String.CASE_INSENSITIVE_ORDER);
@@ -112,6 +174,11 @@ public class TransactionsController {
         model.addAttribute("transactionCategoriesNames", transactionCategoriesNames);
     }
 
+    /**
+     * Adds necessary attributes about user transaction specific by id to model.
+     * @param id - transaction id
+     * @param model - Model from MVC
+     */
     private void addAttributesToModel(Integer id, Model model) {
         String username = (String) httpSession.getAttribute("username");
         List<TransactionDto> transactionDtoList = transactionService.getUserTransactionByRange(username, (id - 1) * 10, 10);
@@ -119,6 +186,11 @@ public class TransactionsController {
         model.addAttribute("pathId", id);
     }
 
+    /**
+     * Adds specific, occurred errors to model.
+     * @param errors - Errors
+     * @param model - Model from MVC
+     */
     private void addErrorsAttributesToModel(Errors errors, Model model) {
         if (isErrorOccured(errors, "value")) model.addAttribute("invalidValue", environment.getProperty("Niepoprawna kwota transakcji!"));
         if (isErrorOccured(errors, "description")) model.addAttribute("invalidDescription", environment.getProperty("Niepoprawny opis transakcji!"));

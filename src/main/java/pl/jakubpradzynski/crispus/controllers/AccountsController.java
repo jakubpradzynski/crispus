@@ -26,6 +26,13 @@ import java.util.List;
 
 import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
 
+/**
+ * A controller-type class for handling account-related requests.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Controller
 public class AccountsController {
 
@@ -41,6 +48,13 @@ public class AccountsController {
     @Autowired
     private Environment environment;
 
+    /**
+     * Method supports request GET for a path "/accounts".
+     * Adds the necessary data related to user accounts to the model.
+     * @param model - Model from MVC
+     * @return Model and View (accounts.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
     public ModelAndView showAccounts(Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -48,6 +62,15 @@ public class AccountsController {
         return new ModelAndView("accounts", "model", model);
     }
 
+    /**
+     * Method supports request POST for a path "/account/edit".
+     * Validates data from the user and, depending on the result, changes the account name or returns an error.
+     * @param changeAccountNameDto - data from user with new account name
+     * @param result - BindingResult
+     * @param model - Model from MVC
+     * @return Model and View (accounts.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/account/edit", method = RequestMethod.POST)
     public ModelAndView editAccountName(@ModelAttribute("newAccountName") @Valid ChangeAccountNameDto changeAccountNameDto, BindingResult result, Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -61,6 +84,16 @@ public class AccountsController {
         return new ModelAndView("redirect:/accounts");
     }
 
+    /**
+     * Method supports request POST for a path "/account/new".
+     * Validates data from the user and, depending on the result, add new account or returns an error.
+     * @param newAccountDto - data for new account
+     * @param result - BindingResult
+     * @param model - Model from MVC
+     * @param errors - Errors
+     * @return Model and View (accounts.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/account/new", method = RequestMethod.POST)
     public ModelAndView addNewAccount(@ModelAttribute("newAccountName") @Valid NewAccountDto newAccountDto, BindingResult result, Model model, Errors errors) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -74,6 +107,16 @@ public class AccountsController {
         return new ModelAndView("redirect:/accounts");
     }
 
+    /**
+     * Method supports request POST for a path "/account/remove".
+     * Checks whether the session has expired.
+     * Validates data from the user and, depending on the result, remove account or returns an error.
+     * @param removeAccountDto - data about removing account
+     * @param result - BindingResult
+     * @param model - Model from MVC
+     * @param errors - Errors
+     * @return Model and View (accounts.html)
+     */
     @RequestMapping(value = "/account/remove", method = RequestMethod.POST)
     public ModelAndView removeAccount(@ModelAttribute("removeAccountDto") @Valid RemoveAccountDto removeAccountDto, BindingResult result, Model model, Errors errors) {
         SessionUtils.isUserSessionActive(httpSession);
@@ -87,6 +130,11 @@ public class AccountsController {
         return new ModelAndView("redirect:/accounts");
     }
 
+    /**
+     * Private method which add elements to model
+     * Adds to model data related with user accounts.
+     * @param model - Model from MVC
+     */
     private void addElementsToModel(Model model) {
         String username = (String) httpSession.getAttribute("username");
         List<String> accountsNames = dataService.getUserAccountsNames(username);
@@ -100,6 +148,11 @@ public class AccountsController {
         model.addAttribute("removeAccountDto", new RemoveAccountDto());
     }
 
+    /**
+     * Private method that adds errors to the model.
+     * @param errors - Errors
+     * @param model - Model form MVC
+     */
     private void addErrorsAttributesToModel(Errors errors, Model model) {
         if (isErrorOccured(errors, "name")) model.addAttribute("invalidAccountName", environment.getProperty("Niepoprawna nazwa konta!"));
         if (isErrorOccured(errors, "moneyAmount")) model.addAttribute("invalidAccountAmount", environment.getProperty("Niepoprawna kwota na koncie!"));

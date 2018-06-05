@@ -7,7 +7,7 @@ import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.repositories.*;
 import pl.jakubpradzynski.crispus.utils.DateUtils;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.util.List;
 

@@ -15,12 +15,25 @@ import pl.jakubpradzynski.crispus.services.UserService;
 
 import javax.validation.Valid;
 
+/**
+ * A controller-type class for handling registration-related requests.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Controller
 public class RegistrationController {
 
     @Autowired
     private UserService userService;
 
+    /**
+     * Method supports request GET for a path "/registration".
+     * Shows registration form page.
+     * @param model - Model from MVC
+     * @return String (registration.html)
+     */
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String showRegistrationForm(Model model) {
         UserDto userDto = new UserDto();
@@ -28,6 +41,13 @@ public class RegistrationController {
         return "registration";
     }
 
+    /**
+     * Method supports request POST for a path "/registration".
+     * Validates data from the user and, depending on the result, register new user or returns an error.
+     * @param accountDto - user data
+     * @param result - BindingResult
+     * @return Model and View (successRegister.html when registration was successful and registration.html otherwise)
+     */
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView registerUserAccount
             (@ModelAttribute("user") @Valid UserDto accountDto,
@@ -47,6 +67,11 @@ public class RegistrationController {
         }
     }
 
+    /**
+     * Method register new user.
+     * @param accountDto - user data
+     * @return User when registration was successful and null otherwise
+     */
     private User createUserAccount(UserDto accountDto) {
         User registered;
         try {

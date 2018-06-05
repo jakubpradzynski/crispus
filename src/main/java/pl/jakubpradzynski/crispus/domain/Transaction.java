@@ -5,6 +5,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
+/**
+ * A domain class that maps the user's transaction.
+ * It contains: id, description, user who created it, account from which it was paid, value, date and optional place and category.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Entity(name = "TRANSACTION")
 @Table(name = "TRANSACTION")
 public class Transaction {

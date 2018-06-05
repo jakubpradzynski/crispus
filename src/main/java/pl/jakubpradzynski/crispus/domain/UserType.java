@@ -6,6 +6,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * A domain class that maps the user type.
+ * It contains: id, name and limits of accounts, categories and places.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Entity(name = "USER_TYPE")
 @Table(name = "USER_TYPE")
 public class UserType {

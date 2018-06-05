@@ -12,7 +12,7 @@ import pl.jakubpradzynski.crispus.exceptions.HashGenerationException;
 import pl.jakubpradzynski.crispus.repositories.*;
 import pl.jakubpradzynski.crispus.utils.HashUtils;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Random;
 

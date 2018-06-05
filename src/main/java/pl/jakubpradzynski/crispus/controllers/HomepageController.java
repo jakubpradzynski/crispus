@@ -20,11 +20,19 @@ import pl.jakubpradzynski.crispus.utils.SessionUtils;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
 import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
 
+/**
+ * A controller-type class for handling homepage requests.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Controller
 @PropertySource("classpath:/i18n/messages_pl.properties")
 public class HomepageController {
@@ -41,6 +49,13 @@ public class HomepageController {
     @Autowired
     private Environment environment;
 
+    /**
+     * Method supports request GET for a path "/homepage".
+     * Adds the necessary data about user to model and show home page.
+     * @param model - Model from MVC
+     * @return String (homepage.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/homepage", method = RequestMethod.GET)
     public String showHomepage(Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -48,10 +63,20 @@ public class HomepageController {
         return "homepage.html";
     }
 
+    /**
+     * Method supports request POST for a path "/homepage".
+     * Validates data from the user and, depending on the result, add new user transaction or returns an error.
+     * @param transactionDto - info about new transaction from user
+     * @param result - BindingResult
+     * @param errors - Errors
+     * @param model - Model from MVC
+     * @return Model and View (homepage.html)
+     * @throws ParseException - Exception is thrown when it is impossible to parse the date from the string.
+     */
     @RequestMapping(value = "/homepage", method = RequestMethod.POST)
     public ModelAndView addNewTransaction
             (@ModelAttribute("newTransactionDto") @Valid TransactionDto transactionDto,
-             BindingResult result, Errors errors, Model model) throws Exception {
+             BindingResult result, Errors errors, Model model) throws ParseException {
 
         if (!result.hasErrors()) {
             transactionService.addNewUserTransaction(transactionDto);
@@ -66,6 +91,10 @@ public class HomepageController {
         return new ModelAndView("redirect:/homepage");
     }
 
+    /**
+     * Method add necessary attributes about user to model.
+     * @param model - Model from MVC
+     */
     private void addAttributesToModel(Model model) {
         List<String> accountNames = dataService.getUserAccountsNames((String) httpSession.getAttribute("username"));
         Collections.sort(accountNames, String.CASE_INSENSITIVE_ORDER);
@@ -81,6 +110,11 @@ public class HomepageController {
         model.addAttribute("transactionCategoriesNames", transactionCategoriesNames);
     }
 
+    /**
+     * Method add specific occurred errors to model.
+     * @param errors - Errors
+     * @param model - Model from MVC
+     */
     private void addErrorsAttributesToModel(Errors errors, Model model) {
         if (isErrorOccured(errors, "value")) model.addAttribute("invalidValue", environment.getProperty("Niepoprawna kwota transakcji!"));
         if (isErrorOccured(errors, "description")) model.addAttribute("invalidDescription", environment.getProperty("Niepoprawny opis transakcji!"));

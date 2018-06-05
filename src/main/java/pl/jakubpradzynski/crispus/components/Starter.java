@@ -9,7 +9,7 @@ import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.dto.*;
 import pl.jakubpradzynski.crispus.exceptions.EmailExistsException;
 import pl.jakubpradzynski.crispus.exceptions.PlaceExistsException;
-import pl.jakubpradzynski.crispus.exceptions.TransactionCategoryExistsException;
+import pl.jakubpradzynski.crispus.exceptions.CategoryExistsException;
 import pl.jakubpradzynski.crispus.repositories.*;
 import pl.jakubpradzynski.crispus.services.*;
 
@@ -17,10 +17,24 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Locale;
 
+/**
+ * The program's starting class.
+ * It contains the method that is executed when the program is started,
+ * which calls in the new thread the private method that initializes the database.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Component
 @Scope("singleton")
 public class Starter implements CommandLineRunner {
 
+    /**
+     * The method that runs when the program starts.
+     * Sets the session location to Poland and launches a private {@link Starter#initDB() method} for initializing the database.
+     * @param args - arguments from the command line
+     */
     @Override
     public void run(String... args) {
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
@@ -65,6 +79,9 @@ public class Starter implements CommandLineRunner {
     @Autowired
     private MonthlyBudgetService monthlyBudgetService;
 
+    /**
+     * The method initializes the database for basic predefined categories and places, and creates two sample users.
+     */
     private void initDB() {
         userTypeRepository.createUserType("normal", 2, 5, 5);
         userTypeRepository.createUserType("premium", 4, 15, 15);
@@ -136,7 +153,7 @@ public class Starter implements CommandLineRunner {
         try {
             categoryService.addNewUserCategory(jan.getEmail(), new CategoryDto(null, "Lokaty", 'F'));
             categoryService.addNewUserCategory(jan.getEmail(), new CategoryDto(null, "Kredyty", 'F'));
-        } catch (TransactionCategoryExistsException e) {
+        } catch (CategoryExistsException e) {
             e.printStackTrace();
         }
         accountService.addNewUserAccount(new NewAccountDto(jan.getEmail(), "Konto w PKO", 0.));
@@ -184,7 +201,7 @@ public class Starter implements CommandLineRunner {
         }
         try {
             categoryService.addNewUserCategory(anna.getEmail(), new CategoryDto(null, "Biżuteria", 'F'));
-        } catch (TransactionCategoryExistsException e) {
+        } catch (CategoryExistsException e) {
             e.printStackTrace();
         }
         try {

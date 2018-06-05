@@ -13,7 +13,7 @@ import pl.jakubpradzynski.crispus.repositories.TransactionRepository;
 import pl.jakubpradzynski.crispus.repositories.UserRepository;
 import pl.jakubpradzynski.crispus.utils.DateUtils;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;

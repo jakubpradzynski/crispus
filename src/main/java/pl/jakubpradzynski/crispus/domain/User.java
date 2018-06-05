@@ -8,6 +8,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
+/**
+ * A domain class that maps the user.
+ * It contains: id, email, hash password, salt, first name, last name, optional phone number and user type.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Entity(name = "USERS")
 @Table(name = "USERS")
 public class User {

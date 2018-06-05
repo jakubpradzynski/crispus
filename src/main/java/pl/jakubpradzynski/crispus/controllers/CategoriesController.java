@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.jakubpradzynski.crispus.dto.CategoryDto;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 import pl.jakubpradzynski.crispus.exceptions.SessionExpiredException;
-import pl.jakubpradzynski.crispus.exceptions.TransactionCategoryExistsException;
+import pl.jakubpradzynski.crispus.exceptions.CategoryExistsException;
 import pl.jakubpradzynski.crispus.services.CategoryService;
 import pl.jakubpradzynski.crispus.utils.SessionUtils;
 
@@ -25,6 +25,13 @@ import java.util.List;
 
 import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
 
+/**
+ * A controller-type class for handling category-related requests.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Controller
 public class CategoriesController {
 
@@ -37,6 +44,13 @@ public class CategoriesController {
     @Autowired
     private Environment environment;
 
+    /**
+     * Method supports request GET for a path "/categories".
+     * Adds the necessary data related to categories available for user to the model.
+     * @param model - Model from MVC.
+     * @return Model and View (categories.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     public ModelAndView showCategories(Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -44,8 +58,19 @@ public class CategoriesController {
         return new ModelAndView("categories", "model", model);
     }
 
+    /**
+     * Method supports request POST for a path "/category/add".
+     * Validates data from the user and, depending on the result, add new user category or returns an error.
+     * @param categoryDto - info from user about new category.
+     * @param model - Model from MVC.
+     * @param result - BidningResult.
+     * @param errors - Errors.
+     * @return Model and View (categories.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     * @throws CategoryExistsException - Exception thrown when category already exists.
+     */
     @RequestMapping(value = "/category/add", method = RequestMethod.POST)
-    public ModelAndView addNewCategory(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, Model model, BindingResult result, Errors errors) throws SessionExpiredException, TransactionCategoryExistsException {
+    public ModelAndView addNewCategory(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, Model model, BindingResult result, Errors errors) throws SessionExpiredException, CategoryExistsException {
         SessionUtils.isUserSessionActive(httpSession);
         if (result.hasErrors()) {
             model.addAttribute("newCategory", categoryDto);
@@ -58,6 +83,16 @@ public class CategoriesController {
         return new ModelAndView("redirect:/categories");
     }
 
+    /**
+     * Method supports request GET for a path "/category/{id}/{size}".
+     * Method return view with information about category specific by id.
+     * Size is responsible for the range of transactions displayed.
+     * @param id - category id
+     * @param size - category transactions range
+     * @param model - Model from MVC
+     * @return Model and View (category.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/category/{id}/{size}", method = RequestMethod.GET)
     public ModelAndView showSingleCategory(@PathVariable("id") Integer id, @PathVariable("size") Integer size, Model model) throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);
@@ -65,6 +100,13 @@ public class CategoriesController {
         return new ModelAndView("category", "model", model);
     }
 
+    /**
+     * Method supports request GET for a path "/category/remove/{id}".
+     * Checks whether the session has expired.
+     * Mehod remove user category specific by id.
+     * @param id - category id
+     * @return String (redirect:/categories.html)
+     */
     @RequestMapping(value = "/category/remove/{id}", method = RequestMethod.GET)
     public String removeCategory(@PathVariable("id") Integer id) {
         SessionUtils.isUserSessionActive(httpSession);
@@ -73,8 +115,20 @@ public class CategoriesController {
         return "redirect:/categories";
     }
 
+    /**
+     * Method supports request POST for a path "/category/changeName/{id}".
+     * Checks whether the session has expired.
+     * Validates data from the user and, depending on the result, add change user category or returns an error.
+     * @param id - category id
+     * @param categoryDto - new category data
+     * @param model - Model from MVC
+     * @param result - BindingResult
+     * @param errors - Errors
+     * @return Model and View (category.html)
+     * @throws CategoryExistsException - Exception thrown when category already exists.
+     */
     @RequestMapping(value = "/category/changeName/{id}", method = RequestMethod.POST)
-    public ModelAndView changeCategoryName(@PathVariable("id") Integer id, @ModelAttribute("editedCategory") @Valid CategoryDto categoryDto, Model model, BindingResult result, Errors errors) throws  TransactionCategoryExistsException {
+    public ModelAndView changeCategoryName(@PathVariable("id") Integer id, @ModelAttribute("editedCategory") @Valid CategoryDto categoryDto, Model model, BindingResult result, Errors errors) throws CategoryExistsException {
         SessionUtils.isUserSessionActive(httpSession);
         String username = (String) httpSession.getAttribute("username");
         if (result.hasErrors()) {
@@ -88,6 +142,12 @@ public class CategoriesController {
         return new ModelAndView("redirect:/category/" + id + "/1");
     }
 
+    /**
+     * Method add necessary attributes related with single category to model.
+     * @param id - category id
+     * @param size - category transactions range
+     * @param model - Model from MVC
+     */
     private void addAttributesToModelOfSingleCategory(Integer id, Integer size, Model model) {
         String username = (String) httpSession.getAttribute("username");
         CategoryDto categoryDto = categoryService.getTransactionCategoryDtoById(id);
@@ -98,6 +158,10 @@ public class CategoriesController {
         model.addAttribute("pathSize", size);
     }
 
+    /**
+     * Method add necessary attributes related with user categories to model.
+     * @param model - Model from MVC
+     */
     private void addAttributesToModel(Model model) {
         String username = (String) httpSession.getAttribute("username");
         Integer usedCategories = categoryService.getUserUsedCategoriesNumber(username);
@@ -113,6 +177,11 @@ public class CategoriesController {
         model.addAttribute("newCategory", new CategoryDto());
     }
 
+    /**
+     * Method add specific occurred errors to model
+     * @param errors - Errors
+     * @param model - Model from MVC
+     */
     private void addErrorsAttributesToModel(Errors errors, Model model) {
         if (isErrorOccured(errors, "name")) model.addAttribute("invalidCategoryName", environment.getProperty("Niepoprawna nazwa kategorii!"));
     }

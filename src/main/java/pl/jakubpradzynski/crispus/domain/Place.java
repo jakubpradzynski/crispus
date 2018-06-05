@@ -5,6 +5,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
+/**
+ * A domain class that maps the place.
+ * It contains: id, name, users to which it is assigned and if 'T' / 'F' is predefined.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Entity(name = "PLACE")
 @Table(name = "PLACE")
 public class Place {

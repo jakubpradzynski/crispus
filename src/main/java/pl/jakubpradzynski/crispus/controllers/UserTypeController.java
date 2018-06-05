@@ -10,6 +10,13 @@ import pl.jakubpradzynski.crispus.utils.SessionUtils;
 
 import javax.servlet.http.HttpSession;
 
+/**
+ * A controller-type class for handling user-type-related requests.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Controller
 public class UserTypeController {
 
@@ -19,6 +26,12 @@ public class UserTypeController {
     @Autowired
     private UserTypeService userTypeService;
 
+    /**
+     * Method supports request GET for a path "/premium".
+     * Change user type to premium.
+     * @return String (premium.html)
+     * @throws SessionExpiredException - Checks whether the session has expired.
+     */
     @RequestMapping(value = "/premium", method = RequestMethod.GET)
     public String premium() throws SessionExpiredException {
         SessionUtils.isUserSessionActive(httpSession);

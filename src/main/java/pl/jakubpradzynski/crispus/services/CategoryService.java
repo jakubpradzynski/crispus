@@ -7,13 +7,13 @@ import pl.jakubpradzynski.crispus.domain.Transaction;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.dto.CategoryDto;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
-import pl.jakubpradzynski.crispus.exceptions.TransactionCategoryExistsException;
+import pl.jakubpradzynski.crispus.exceptions.CategoryExistsException;
 import pl.jakubpradzynski.crispus.repositories.CategoryRepository;
 import pl.jakubpradzynski.crispus.repositories.TransactionRepository;
 import pl.jakubpradzynski.crispus.repositories.UserRepository;
 import pl.jakubpradzynski.crispus.repositories.UserTypeRepository;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
@@ -57,15 +57,15 @@ public class CategoryService {
     }
 
     @Transactional
-    public void addNewUserCategory(String username, CategoryDto categoryDto) throws TransactionCategoryExistsException {
+    public void addNewUserCategory(String username, CategoryDto categoryDto) throws CategoryExistsException {
         User user = userRepository.getUserByEmail(username);
         Category category = categoryRepository.getCategoryByName(categoryDto.getName());
         if (category != null) {
             if (category.getUsers().isEmpty()) {
-                throw new TransactionCategoryExistsException("Użytkownik nie może tworzyć kategorii, która jest predefiniowana");
+                throw new CategoryExistsException("Użytkownik nie może tworzyć kategorii, która jest predefiniowana");
             }
             if (category.getUsers().contains(user)) {
-                throw new TransactionCategoryExistsException("Użytkownik już stworzył taką kategorię");
+                throw new CategoryExistsException("Użytkownik już stworzył taką kategorię");
             }
             category.getUsers().add(user);
             categoryRepository.updateCategory(category);
@@ -102,7 +102,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public Integer changeUserCategoryName(String username, CategoryDto categoryDto) throws TransactionCategoryExistsException {
+    public Integer changeUserCategoryName(String username, CategoryDto categoryDto) throws CategoryExistsException {
         User user = userRepository.getUserByEmail(username);
         Category oldCategory = categoryRepository.getCategoryById(categoryDto.getId());
         Category newCategory = categoryRepository.getCategoryByName(categoryDto.getName());
@@ -111,7 +111,7 @@ public class CategoryService {
                 categoryRepository.changeUserCategoryName(user, categoryDto);
                 return -1;
             } else if (newCategory.getUsers().contains(user)) {
-                throw new TransactionCategoryExistsException("Nie możesz zmienić nazwę miejsca na nazwę już istniejącego!");
+                throw new CategoryExistsException("Nie możesz zmienić nazwę miejsca na nazwę już istniejącego!");
             } else {
                 newCategory.getUsers().add(user);
                 categoryRepository.updateCategory(newCategory);
@@ -128,7 +128,7 @@ public class CategoryService {
                 categoryRepository.updateCategory(oldCategory);
                 return createdCategory.getId();
             } else if (newCategory.getUsers().contains(user)) {
-                throw new TransactionCategoryExistsException("Nie możesz zmienić nazwę miejsca na nazwę już istniejącego!");
+                throw new CategoryExistsException("Nie możesz zmienić nazwę miejsca na nazwę już istniejącego!");
             } else {
                 newCategory.getUsers().add(user);
                 categoryRepository.updateCategory(newCategory);

@@ -17,6 +17,14 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+/**
+ * Web configuration class.
+ * Configurations related to templates, views etc.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @EnableWebMvc
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
@@ -24,10 +32,18 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private ApplicationContext applicationContext;
 
+    /**
+     * Dependency injection using method.
+     * @param applicationContext - ApplicationContext for injection
+     */
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
+    /**
+     * Method setting resource handlers and resource locations.
+     * @param registry - ResourceHandlerRegistry to add new resource handlers and resource locations.
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
@@ -44,6 +60,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                         "/resources/");
     }
 
+    /**
+     * Method creating ThymeleafViewResolver, setting {@link pl.jakubpradzynski.crispus.config.WebConfig#templateEngine template engine} and character encoding.
+     * @return ThymeleafViewResolver.
+     */
     @Bean
     public ViewResolver viewResolver() {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
@@ -52,6 +72,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
+    /**
+     * Method creating SpringTemplateEngine, enable spring el compiler and set {@link pl.jakubpradzynski.crispus.config.WebConfig#templateResolver template resolver}.
+     * @return SpringTemplateEngine.
+     */
     @Bean
     public TemplateEngine templateEngine() {
         SpringTemplateEngine engine = new SpringTemplateEngine();
@@ -60,6 +84,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return engine;
     }
 
+    /**
+     * Method create SpringResourceTemplateResolver, setting application context, prefix, suffix, template mode and character encoding.
+     * @return SpringResourceTemplateResolver.
+     */
     private ITemplateResolver templateResolver() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
         resolver.setApplicationContext(applicationContext);

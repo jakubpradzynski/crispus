@@ -13,7 +13,7 @@ import pl.jakubpradzynski.crispus.repositories.TransactionRepository;
 import pl.jakubpradzynski.crispus.repositories.UserRepository;
 import pl.jakubpradzynski.crispus.repositories.UserTypeRepository;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service

@@ -7,7 +7,7 @@ import pl.jakubpradzynski.crispus.domain.UserType;
 import pl.jakubpradzynski.crispus.repositories.UserRepository;
 import pl.jakubpradzynski.crispus.repositories.UserTypeRepository;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserTypeService {

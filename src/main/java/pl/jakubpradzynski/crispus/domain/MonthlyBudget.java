@@ -4,6 +4,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+/**
+ * A domain class that maps the user's monthly budget.
+ * It contains: id, the user who created it, the start and end date, and the amount.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Entity(name = "MONTHLY_BUDGET")
 @Table(name = "MONTHLY_BUDGET")
 public class MonthlyBudget {

@@ -4,6 +4,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * A domain class that maps the user's account.
+ * It contains: id, user to which it is assigned, name and amount.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Entity(name = "ACCOUNT")
 @Table(name = "ACCOUNT")
 public class Account {
