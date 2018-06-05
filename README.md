@@ -35,6 +35,7 @@ gradle clean
 gradle build
 java -jar build/libs/crispus-0.0.1-SNAPSHOT.jar
 ```
+Then enter the address localhost:8090 in the browser.
 
 ##### Created example users:
 1. Jan Kowalski
