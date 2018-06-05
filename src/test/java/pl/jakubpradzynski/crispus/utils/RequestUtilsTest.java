@@ -13,13 +13,13 @@ public class RequestUtilsTest {
         Errors errors = new BeanPropertyBindingResult("", "");
         FieldError fieldError = new FieldError("test", "test", "test");
         ((BeanPropertyBindingResult) errors).addError(fieldError);
-        Assert.assertTrue(RequestUtils.isErrorOccured(errors, "test"));
+        Assert.assertTrue(RequestUtils.isErrorOccurred(errors, "test"));
     }
 
     @Test
     public void isErrorOccuredNegativeTest() {
         Errors errors = new BeanPropertyBindingResult("", "");
-        Assert.assertFalse(RequestUtils.isErrorOccured(errors, "test"));
+        Assert.assertFalse(RequestUtils.isErrorOccurred(errors, "test"));
     }
 
 }

@@ -11,12 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * A repository-type class to perform database queries related to places.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Repository
 public class PlaceRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Method create new place in database.
+     * @param name - new place name
+     * @param userSet - place users set
+     * @param isPredefined - is predefined or not
+     */
     @Transactional
     public void createPlace(String name, Set<User> userSet, Character isPredefined) {
         Place place = new Place(name, userSet, isPredefined);
@@ -28,10 +41,20 @@ public class PlaceRepository {
         entityManager.persist(place);
     }
 
+    /**
+     * Methods returns place specific by id.
+     * @param id - place id
+     * @return Place
+     */
     public Place getPlaceById(Integer id) {
         return entityManager.find(Place.class, id);
     }
 
+    /**
+     * Methods returns place specific by name.
+     * @param name - place name
+     * @return Place
+     */
     public Place getPlaceByName(String name) {
         List<Place> places = entityManager.createQuery("SELECT p FROM PLACE p WHERE p.name=:name", Place.class)
                 .setParameter("name", name)
@@ -58,12 +81,21 @@ public class PlaceRepository {
                 .getResultList();
     }
 
+    /**
+     * Method returns all predefined places.
+     * @return List of Place (predefined places)
+     */
     public Collection<Place> getAllPreDefinedPlaces() {
         return entityManager.createQuery("SELECT p FROM PLACE p WHERE p.isPredefined=:isPredefined", Place.class)
                 .setParameter("isPredefined", 'T')
                 .getResultList();
     }
 
+    /**
+     * Method returns all places names available to choose by user.
+     * @param user - user which available places names we want to receive
+     * @return List of String (places names)
+     */
     public Collection<String> getAllPlacesNamesAvailableForUser(User user) {
         Collection<Place> preDefinedPlaces = getAllPreDefinedPlaces();
         Collection<String> allPlacesNames = new ArrayList<>();
@@ -79,6 +111,11 @@ public class PlaceRepository {
         return allPlacesNames;
     }
 
+    /**
+     * Method returns number of user's used places.
+     * @param user - user which used places number we want to receive
+     * @return Integer (number of used places)
+     */
     public Integer getUserUsedPlacesNumber(User user) {
         return entityManager.createQuery("SELECT COUNT(p) FROM PLACE p WHERE :user in elements(p.users) AND p.isPredefined=:isPredefined", Long.class)
                 .setParameter("user", user)
@@ -86,6 +123,10 @@ public class PlaceRepository {
                 .getSingleResult().intValue();
     }
 
+    /**
+     * Method update place in database.
+     * @param place - place which we want to update
+     */
     @Transactional
     public void updatePlace(Place place) {
         entityManager.merge(place);
@@ -96,6 +137,11 @@ public class PlaceRepository {
         entityManager.remove(id);
     }
 
+    /**
+     * Method returns places created by user.
+     * @param user - user which places we want to receive
+     * @return List of Place (places created by user)
+     */
     public Collection<Place> getPlaceCreatedByUser(User user) {
         return entityManager.createQuery("SELECT p FROM PLACE p WHERE :user in elements(p.users) AND p.isPredefined=:isPredefined", Place.class)
                 .setParameter("user", user)
@@ -103,6 +149,10 @@ public class PlaceRepository {
                 .getResultList();
     }
 
+    /**
+     * Method removes place specific by id.
+     * @param id - place id
+     */
     @Transactional
     public void removePlace(Integer id) {
         entityManager.createQuery("DELETE FROM PLACE p WHERE p.id=:id")
@@ -110,6 +160,11 @@ public class PlaceRepository {
                 .executeUpdate();
     }
 
+    /**
+     * Method changes user's place name.
+     * @param user - user which place name we want to change
+     * @param placeDto - new place data
+     */
     @Transactional
     public void changeUserPlaceName(User user, PlaceDto placeDto) {
         entityManager.createQuery("UPDATE PLACE p SET p.name=:name WHERE p.id=:id AND :user in elements(p.users)")

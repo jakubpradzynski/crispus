@@ -9,12 +9,26 @@ import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
+/**
+ * A repository-type class to perform database queries related to monthly budgets.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Repository
 public class MonthlyBudgetRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Methods create new budget in database.
+     * @param user - user which create new monthly budget
+     * @param startDate - start date of budget
+     * @param endDate - end date of budget
+     * @param amount - budget amount
+     */
     @Transactional
     public void createMonthlyBudget(User user, Date startDate, Date endDate, Double amount) {
         MonthlyBudget monthlyBudget = new MonthlyBudget(user, startDate, endDate, amount);
@@ -26,6 +40,11 @@ public class MonthlyBudgetRepository {
         entityManager.persist(monthlyBudget);
     }
 
+    /**
+     * Methods returns monthly budget specific by id.
+     * @param id - budget id
+     * @return MonthlyBudget
+     */
     public MonthlyBudget getMonthlyBudgetById(Integer id) {
         return entityManager.find(MonthlyBudget.class, id);
     }
@@ -37,6 +56,11 @@ public class MonthlyBudgetRepository {
                 .getSingleResult();
     }
 
+    /**
+     * Method returns all monthly budgets created by user.
+     * @param user - user which all monthly budgets we want to receive
+     * @return List of MonthlyBudget
+     */
     public Collection<MonthlyBudget> getAllUserMonthlyBudgets(User user) {
         return entityManager.createQuery("SELECT mb FROM MONTHLY_BUDGET mb WHERE mb.user=:user", MonthlyBudget.class)
                 .setParameter("user", user)
@@ -53,6 +77,11 @@ public class MonthlyBudgetRepository {
         entityManager.remove(id);
     }
 
+    /**
+     * Method returns information about actual user's monthly budget.
+     * @param user - user which actual monthly budget we want to receive
+     * @return MonthlyBudgetInfoDto (info about actual user's monthly budget)
+     */
     public MonthlyBudgetInfoDto getUserActualMonthlyBudgetDto(User user) {
         Date date = new Date();
         List<MonthlyBudget> monthlyBudgets = entityManager.createQuery("SELECT mb FROM MONTHLY_BUDGET mb WHERE mb.user=:user AND :date BETWEEN mb.startDate AND mb.endDate", MonthlyBudget.class)

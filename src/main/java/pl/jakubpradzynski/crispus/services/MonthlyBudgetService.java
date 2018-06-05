@@ -20,6 +20,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * A service-type class related to monthly budgets.
+ *
+ * @author Jakub Prądzyński
+ * @version 1.0
+ * @since 03.06.2018r.
+ */
 @Service
 public class MonthlyBudgetService {
 
@@ -32,6 +39,12 @@ public class MonthlyBudgetService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    /**
+     * Method finds User class object asking User Repository for user by specific email.
+     * Returns info about actual monthly budget if exists or null after receive data from Monthly Budget Repository and Transaction Repository.
+     * @param username - user's email
+     * @return MonthlyBudgetInfoDto
+     */
     public MonthlyBudgetInfoDto getUserActualMonthlyBudgetDto(String username) {
         User user = userRepository.getUserByEmail(username);
         MonthlyBudgetInfoDto actualBudget = monthlyBudgetRepository.getUserActualMonthlyBudgetDto(user);
@@ -41,6 +54,12 @@ public class MonthlyBudgetService {
         return actualBudget;
     }
 
+    /**
+     * Method finds User class object asking User Repository for user by specific email.
+     * Returns info about last user's monthly budgets after receive data from Monthly Budget Repository and Transaction Repository.
+     * @param username - user's email
+     * @return List of MonthlyBudgetInfoDto
+     */
     public List<MonthlyBudgetInfoDto> getUserLastMonthlyBudgetsDto(String username) {
         User user = userRepository.getUserByEmail(username);
         List<MonthlyBudget> monthlyBudgetList = (List<MonthlyBudget>) monthlyBudgetRepository.getAllUserMonthlyBudgets(user);
@@ -53,18 +72,38 @@ public class MonthlyBudgetService {
         return sortMonthlyBudgetInfoDtos(monthlyBudgetInfoDtoList);
     }
 
+    /**
+     * Method finds User class object asking User Repository for user by specific email.
+     * Returns sorted list of info about monthly budgets.
+     * Sort descending by date.
+     * @param monthlyBudgetInfoDtoList - list of bugets info to sort
+     * @return List of MonthlyBudgetInfoDto (sorted)
+     */
     protected List<MonthlyBudgetInfoDto> sortMonthlyBudgetInfoDtos(List<MonthlyBudgetInfoDto> monthlyBudgetInfoDtoList) {
         monthlyBudgetInfoDtoList.sort(Comparator.comparing(o -> o.getStartDate()));
         Collections.reverse(monthlyBudgetInfoDtoList);
         return monthlyBudgetInfoDtoList;
     }
 
+    /**
+     * Method finds User class object asking User Repository for user by specific email.
+     * Calls a function from Monthly Budget Repository to create new user's monthly budget.
+     * @param username - user's email
+     * @param newMonthlyBudgetDto - data about new user's monthly budget
+     * @throws ParseException  - Exception is thrown when it is impossible to parse the date from the string.
+     */
     @Transactional
     public void addNewUserMonthlyBudget(String username, NewMonthlyBudgetDto newMonthlyBudgetDto) throws ParseException {
         User user = userRepository.getUserByEmail(username);
         monthlyBudgetRepository.createMonthlyBudget(user, DateUtils.stringToDate(newMonthlyBudgetDto.getStartDate(), "yyyy-MM-dd"),DateUtils.stringToDate(newMonthlyBudgetDto.getEndDate(), "yyyy-MM-dd"), newMonthlyBudgetDto.getAmount());
     }
 
+    /**
+     * Method finds User class object asking User Repository for user by specific email.
+     * Returns info about budget specific by id after receive data from Monthly Budget Repository and Transaction Repository.
+     * @param id - budget id
+     * @return MonthlyBudgetInfoDto
+     */
     public MonthlyBudgetInfoDto getBudgetInfoById(Integer id) {
         MonthlyBudgetInfoDto monthlyBudgetInfoDto = MonthlyBudgetInfoDto.fromMonthlyBudget(monthlyBudgetRepository.getMonthlyBudgetById(id));
         monthlyBudgetInfoDto.setUsedAmount(transactionRepository.getUserBudgetUsedAmount(userRepository.getUserByEmail(monthlyBudgetInfoDto.getUsername()), monthlyBudgetInfoDto));
@@ -72,6 +111,13 @@ public class MonthlyBudgetService {
         return monthlyBudgetInfoDto;
     }
 
+    /**
+     * Method finds User class object asking User Repository for user by specific email.
+     * Returns list of transactions info in the budget after calling Transaction Repository for this data.
+     * @param username - user's email
+     * @param monthlyBudgetInfoDto - info about budget which transactions we want to receive
+     * @return List of TransactionDto
+     */
     public List<TransactionDto> getUserBudgetTransactionsList(String username, MonthlyBudgetInfoDto monthlyBudgetInfoDto) {
         User user = userRepository.getUserByEmail(username);
         List<Transaction> transactions = (List<Transaction>) transactionRepository.getUserTransactionsInBudget(user, monthlyBudgetInfoDto);

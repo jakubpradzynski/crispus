@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 
-import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
+import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccurred;
 
 /**
  * A controller-type class for handling account-related requests.
@@ -154,8 +154,8 @@ public class AccountsController {
      * @param model - Model form MVC
      */
     private void addErrorsAttributesToModel(Errors errors, Model model) {
-        if (isErrorOccured(errors, "name")) model.addAttribute("invalidAccountName", environment.getProperty("Niepoprawna nazwa konta!"));
-        if (isErrorOccured(errors, "moneyAmount")) model.addAttribute("invalidAccountAmount", environment.getProperty("Niepoprawna kwota na koncie!"));
-        if (isErrorOccured(errors, "username")) model.addAttribute("usernameError", environment.getProperty("Wystąpił jakiś błąd z nazwą użytkownika!"));
+        if (isErrorOccurred(errors, "name")) model.addAttribute("invalidAccountName", environment.getProperty("Niepoprawna nazwa konta!"));
+        if (isErrorOccurred(errors, "moneyAmount")) model.addAttribute("invalidAccountAmount", environment.getProperty("Niepoprawna kwota na koncie!"));
+        if (isErrorOccurred(errors, "username")) model.addAttribute("usernameError", environment.getProperty("Wystąpił jakiś błąd z nazwą użytkownika!"));
     }
 }

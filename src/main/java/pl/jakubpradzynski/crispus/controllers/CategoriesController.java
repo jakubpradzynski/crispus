@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 
-import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
+import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccurred;
 
 /**
  * A controller-type class for handling category-related requests.
@@ -183,6 +183,6 @@ public class CategoriesController {
      * @param model - Model from MVC
      */
     private void addErrorsAttributesToModel(Errors errors, Model model) {
-        if (isErrorOccured(errors, "name")) model.addAttribute("invalidCategoryName", environment.getProperty("Niepoprawna nazwa kategorii!"));
+        if (isErrorOccurred(errors, "name")) model.addAttribute("invalidCategoryName", environment.getProperty("Niepoprawna nazwa kategorii!"));
     }
 }

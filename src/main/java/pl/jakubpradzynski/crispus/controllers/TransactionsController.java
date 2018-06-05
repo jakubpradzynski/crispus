@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
-import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccured;
+import static pl.jakubpradzynski.crispus.utils.RequestUtils.isErrorOccurred;
 
 /**
  * A controller-type class for handling transaction-related requests.
@@ -192,8 +192,8 @@ public class TransactionsController {
      * @param model - Model from MVC
      */
     private void addErrorsAttributesToModel(Errors errors, Model model) {
-        if (isErrorOccured(errors, "value")) model.addAttribute("invalidValue", environment.getProperty("Niepoprawna kwota transakcji!"));
-        if (isErrorOccured(errors, "description")) model.addAttribute("invalidDescription", environment.getProperty("Niepoprawny opis transakcji!"));
+        if (isErrorOccurred(errors, "value")) model.addAttribute("invalidValue", environment.getProperty("Niepoprawna kwota transakcji!"));
+        if (isErrorOccurred(errors, "description")) model.addAttribute("invalidDescription", environment.getProperty("Niepoprawny opis transakcji!"));
     }
 
 }
