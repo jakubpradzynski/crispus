@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A repository-type class to perform database queries related to accounts.
@@ -50,10 +51,12 @@ public class AccountRepository {
      * @return Account
      */
     public Account getUserAccountByName(User user, String name) {
-        return entityManager.createQuery("SELECT a FROM ACCOUNT a WHERE a.user=:user AND a.name=:name", Account.class)
+        List<Account> accountList = entityManager.createQuery("SELECT a FROM ACCOUNT a WHERE a.user=:user AND a.name=:name", Account.class)
                 .setParameter("user", user)
                 .setParameter("name", name)
-                .getSingleResult();
+                .getResultList();
+        if (accountList.isEmpty()) return null;
+        return accountList.get(0);
     }
 
     /**

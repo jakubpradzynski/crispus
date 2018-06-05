@@ -21,8 +21,9 @@ mainClassName = 'pl.jakubpradzynski.crispus.CrispusApplication'
 
 group = 'pl.jakubpradzynski'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 10
-targetCompatibility = 10
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 
 repositories {
     mavenCentral()
@@ -37,6 +38,24 @@ jar {
     baseName = 'gs-gradle'
     version = '0.1.0'
 }
+
+//configurations {
+//    providedRuntime
+//}
+
+//task fatJar(type: Jar) {
+//    manifest {
+//        attributes 'Implementation-Title': 'Crispus',
+//                'Implementation-Version': version,
+//                'Main-Class': 'pl.jakubpradzynski.crispus.CrispusApplication'
+//    }
+//    baseName = project.name + '-all'
+//    doFirst {
+//        from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+//    }
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//    with jar
+//}
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 

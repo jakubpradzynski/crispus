@@ -27,3 +27,19 @@ client-server or RMI architecture) OR access to the database
 - Spring Boot
 - Hibernate
 - Thymeleaf
+
+## How to run?:
+In the main project folder on the console, enter the commands:
+```
+gradle clean
+gradle build
+java -jar build/libs/crispus-0.0.1-SNAPSHOT.jar
+```
+
+##### Created example users:
+1. Jan Kowalski
+    - login: jankowalski@gmail.com
+    - password: zaq12wsx
+2. Anna Nowak
+    - login: annanowak@gmail.com
+    - password: qwerty1234
