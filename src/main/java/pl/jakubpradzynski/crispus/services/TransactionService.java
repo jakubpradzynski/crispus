@@ -37,8 +37,8 @@ public class TransactionService {
     private CategoryRepository categoryRepository;
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Creates new user's transaction by call a function in Transaction Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Creates new user's transaction by call a function in Transaction RepositoryClass.
      * @param transactionDto - data about new transaction
      * @throws ParseException - Exception is thrown when it is impossible to parse the date from the string.
      */
@@ -57,16 +57,16 @@ public class TransactionService {
     }
 
     /**
-     * Method returns info about transaction specific by id after calling Transaction Repository.
+     * Method returns info about transaction specific by id after calling Transaction RepositoryClass.
      * @param id - transaction id
      * @return TransactionDto
      */
     public TransactionDto getTransactionDtoById(Integer id) {
-        return TransactionDto.fromTransaction(transactionRepository.getTransactionById(id));
+        return TransactionDto.fromTransaction(transactionRepository.getById(id));
     }
 
     /**
-     * Method change data of transaction specific by id to given data after calling Transaction Repository.
+     * Method change data of transaction specific by id to given data after calling Transaction RepositoryClass.
      * @param id - transaction id
      * @param transactionDto - edited transaction
      * @throws ParseException - Exception is thrown when it is impossible to parse the date from the string.
@@ -77,8 +77,8 @@ public class TransactionService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns list of user's transactions in range after receive this data from Transaction Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns list of user's transactions in range after receive this data from Transaction RepositoryClass.
      * @param username - user's email
      * @param start - start of range
      * @param max - max number in range
@@ -90,11 +90,11 @@ public class TransactionService {
     }
 
     /**
-     * Method removes transaction specific by id by call a function in Transaction Repository.
+     * Method removes transaction specific by id by call a function in Transaction RepositoryClass.
      * @param id - transaction id
      */
     @Transactional
     public void removeTransactionById(Integer id) {
-        transactionRepository.removeTransaction(id);
+        transactionRepository.remove(id);
     }
 }

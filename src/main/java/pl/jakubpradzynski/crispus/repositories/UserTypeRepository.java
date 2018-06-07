@@ -4,8 +4,6 @@ import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.domain.UserType;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 
@@ -17,10 +15,53 @@ import java.util.Collection;
  * @since 03.06.2018r.
  */
 @Repository
-public class UserTypeRepository {
+public class UserTypeRepository extends RepositoryClass<UserType> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) create in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void create(UserType userType) {
+        entityManager.persist(userType);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) getById in RepositoryClass}
+     */
+    @Override
+    public UserType getById(Integer id) {
+        return entityManager.find(UserType.class, id);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) delete in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void delete(UserType userType) {
+        entityManager.remove(userType);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) remove in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void remove(Integer id) {
+        entityManager.createQuery("DELETE FROM USER_TYPE ut WHERE ut.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) update in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void update(UserType userType) {
+        entityManager.merge(userType);
+    }
 
     /**
      * Method creates new user type in database.
@@ -33,15 +74,6 @@ public class UserTypeRepository {
     public void createUserType(String name, Integer accountLimit, Integer transactionCategoryLimit, Integer placeLimit) {
         UserType userType = new UserType(name, accountLimit, transactionCategoryLimit, placeLimit);
         entityManager.persist(userType);
-    }
-
-    @Transactional
-    public void createUserType(UserType userType) {
-        entityManager.persist(userType);
-    }
-
-    public UserType getUserTypeById(Integer id) {
-        return entityManager.find(UserType.class, id);
     }
 
     /**
@@ -71,15 +103,6 @@ public class UserTypeRepository {
                 .getResultList();
     }
 
-    @Transactional
-    public void updateUserType(UserType userType) {
-        entityManager.merge(userType);
-    }
-
-    @Transactional
-    public void deleteUserType(Integer id) {
-        entityManager.remove(id);
-    }
 
     /**
      * Method returns place number available for specific user.

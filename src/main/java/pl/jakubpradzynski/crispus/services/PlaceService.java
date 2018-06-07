@@ -39,8 +39,8 @@ public class PlaceService {
     private TransactionRepository transactionRepository;
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns number of used places by user after calling Place Repository for this data.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns number of used places by user after calling Place RepositoryClass for this data.
      * @param username - user's email
      * @return Integer (user used places number)
      */
@@ -50,8 +50,8 @@ public class PlaceService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns number of available places for user after calling Place Repository for this data.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns number of available places for user after calling Place RepositoryClass for this data.
      * @param username - user's email
      * @return Integer (user available place number)
      */
@@ -61,7 +61,7 @@ public class PlaceService {
     }
 
     /**
-     * Method returns all predefined places info after calling Place Repository for this data.
+     * Method returns all predefined places info after calling Place RepositoryClass for this data.
      * @return List of PlaceDto
      */
     public List<PlaceDto> getPreDefinedPlaces() {
@@ -72,8 +72,8 @@ public class PlaceService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns places created by user after calling Place Repository for this data.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns places created by user after calling Place RepositoryClass for this data.
      * @param username - user's email
      * @return List of PlaceDto
      */
@@ -86,8 +86,8 @@ public class PlaceService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Creates new user place by call a function from Place Repository and validate if category has already exist.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Creates new user place by call a function from Place RepositoryClass and validate if category has already exist.
      * @param username - user's email
      * @param placeDto - new place data
      * @throws PlaceExistsException - Exception thrown after trying create place which already exists.
@@ -104,7 +104,7 @@ public class PlaceService {
                 throw new PlaceExistsException("Użytkownik już stworzył takie miejsce");
             }
             place.getUsers().add(user);
-            placeRepository.updatePlace(place);
+            placeRepository.update(place);
         } else {
             Set<User> users = new HashSet<>(Arrays.asList(user));
             placeRepository.createPlace(placeDto.getName(), users, 'F');
@@ -117,11 +117,11 @@ public class PlaceService {
      * @return PlaceDto
      */
     public PlaceDto getPlaceDtoById(Integer id) {
-        return PlaceDto.fromPlace(placeRepository.getPlaceById(id));
+        return PlaceDto.fromPlace(placeRepository.getById(id));
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * Returns list of transactions info assigned to place in specific range.
      * @param username - user's email
      * @param id - place id
@@ -131,7 +131,7 @@ public class PlaceService {
      */
     public List<TransactionDto> getUserPlaceTransactionsDtoByIdInRange(String username, Integer id, Integer start, Integer max) {
         User user = userRepository.getUserByEmail(username);
-        Place place = placeRepository.getPlaceById(id);
+        Place place = placeRepository.getById(id);
         List<Transaction> transactions = (List<Transaction>) transactionRepository.getUserTransactionsAssignedToPlaceInRange(user, place, start, max);
         List<TransactionDto> transactionDtos = new ArrayList<>();
         if (!transactions.isEmpty()) transactions.forEach(transaction -> transactionDtos.add(TransactionDto.fromTransaction(transaction)));
@@ -139,7 +139,7 @@ public class PlaceService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * Removes user place if place has assigned only one user or remove user from set of users in place.
      * @param username - user's email
      * @param id - place id
@@ -147,18 +147,18 @@ public class PlaceService {
     @Transactional
     public void removeUserPlace(String username, Integer id) {
         User user = userRepository.getUserByEmail(username);
-        Place place = placeRepository.getPlaceById(id);
+        Place place = placeRepository.getById(id);
         transactionRepository.removePlaceFromTransactions(user, place);
         if (place.getUsers().size() == 1) {
-            placeRepository.removePlace(id);
+            placeRepository.remove(id);
         } else {
             place.getUsers().remove(user);
-            placeRepository.updatePlace(place);
+            placeRepository.update(place);
         }
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * Change user's place name if new name hasn't already exist and place has only one assigned user or create new place with new name,
      * swap transactions assigned to old place to new place,
      * remove user from set of users in old place.
@@ -170,7 +170,7 @@ public class PlaceService {
     @Transactional
     public Integer changeUserPlaceName(String username, PlaceDto placeDto) throws PlaceExistsException {
         User user = userRepository.getUserByEmail(username);
-        Place oldPlace = placeRepository.getPlaceById(placeDto.getId());
+        Place oldPlace = placeRepository.getById(placeDto.getId());
         Place newPlace = placeRepository.getPlaceByName(placeDto.getName());
         if (oldPlace.getUsers().size() == 1) {
             if (newPlace == null) {
@@ -180,9 +180,9 @@ public class PlaceService {
                 throw new PlaceExistsException("Nie możesz zmienić nazwę miejsca na nazwę już istniejącego!");
             } else {
                 newPlace.getUsers().add(user);
-                placeRepository.updatePlace(newPlace);
+                placeRepository.update(newPlace);
                 transactionRepository.changePlaceInUserTransactions(user, oldPlace, newPlace);
-                placeRepository.removePlace(oldPlace.getId());
+                placeRepository.remove(oldPlace.getId());
                 return newPlace.getId();
             }
         } else {
@@ -191,16 +191,16 @@ public class PlaceService {
                 Place createdPlace = placeRepository.getPlaceByName(placeDto.getName());
                 transactionRepository.changePlaceInUserTransactions(user, oldPlace, createdPlace);
                 oldPlace.getUsers().remove(user);
-                placeRepository.updatePlace(oldPlace);
+                placeRepository.update(oldPlace);
                 return createdPlace.getId();
             } else if (newPlace.getUsers().contains(user)) {
                 throw new PlaceExistsException("Nie możesz zmienić nazwę miejsca na nazwę już istniejącego!");
             } else {
                 newPlace.getUsers().add(user);
-                placeRepository.updatePlace(newPlace);
+                placeRepository.update(newPlace);
                 transactionRepository.changePlaceInUserTransactions(user, oldPlace, newPlace);
                 oldPlace.getUsers().remove(user);
-                placeRepository.updatePlace(oldPlace);
+                placeRepository.update(oldPlace);
                 return newPlace.getId();
             }
         }

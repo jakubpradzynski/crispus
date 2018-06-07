@@ -4,8 +4,6 @@ import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.*;
 import pl.jakubpradzynski.crispus.dto.ChangeAccountNameDto;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.List;
@@ -18,10 +16,53 @@ import java.util.List;
  * @since 03.06.2018r.
  */
 @Repository
-public class AccountRepository {
+public class AccountRepository extends RepositoryClass<Account> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) create in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void create(Account account) {
+        entityManager.persist(account);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) getById in RepositoryClass}
+     */
+    @Override
+    public Account getById(Integer id) {
+        return entityManager.find(Account.class, id);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) delete in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void delete(Account account) {
+        entityManager.remove(account);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) remove in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void remove(Integer id) {
+        entityManager.createQuery("DELETE FROM ACCOUNT a WHERE a.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) update in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void update(Account account) {
+        entityManager.merge(account);
+    }
 
     /**
      * Method create new user account in database.
@@ -30,18 +71,15 @@ public class AccountRepository {
      * @param moneyAmount - starting money amount on new account
      */
     @Transactional
-    public void createAccount(User user, String name, Double moneyAmount) {
+    public void create(User user, String name, Double moneyAmount) {
         Account account = new Account(user, name, moneyAmount);
         entityManager.persist(account);
     }
 
     @Transactional
-    public void createAccount(Account account) {
+    public void createAccount(User user, String name, Double moneyAmount) {
+        Account account = new Account(user, name, moneyAmount);
         entityManager.persist(account);
-    }
-
-    public Account getAccountById(Integer id) {
-        return entityManager.find(Account.class, id);
     }
 
     /**
@@ -115,32 +153,6 @@ public class AccountRepository {
         entityManager.createQuery("UPDATE ACCOUNT a SET a.moneyAmount=:val WHERE a.id=:id")
                 .setParameter("val", value + account.getMoneyAmount())
                 .setParameter("id", account.getId())
-                .executeUpdate();
-    }
-
-    @Transactional
-    public void updateAccount(User user) {
-        entityManager.merge(user);
-    }
-
-    @Transactional
-    public void deleteAccount(Integer id) {
-        entityManager.remove(id);
-    }
-
-    @Transactional
-    public void deleteAccount(Account account) {
-        entityManager.remove(account);
-    }
-
-    /**
-     * Method remove account specific by id.
-     * @param id - removing account id
-     */
-    @Transactional
-    public void removeAccount(Integer id) {
-        entityManager.createQuery("DELETE FROM ACCOUNT a WHERE a.id=:id")
-                .setParameter("id", id)
                 .executeUpdate();
     }
 

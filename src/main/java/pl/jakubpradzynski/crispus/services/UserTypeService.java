@@ -26,8 +26,8 @@ public class UserTypeService {
     private UserTypeRepository userTypeRepository;
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Changes user type to new one given by name after call a function from User Type Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Changes user type to new one given by name after call a function from User Type RepositoryClass.
      * @param username - user's email
      * @param newUserTypeName - name of new user type for user
      */

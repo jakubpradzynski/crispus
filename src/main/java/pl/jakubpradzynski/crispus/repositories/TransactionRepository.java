@@ -6,8 +6,6 @@ import pl.jakubpradzynski.crispus.domain.*;
 import pl.jakubpradzynski.crispus.dto.MonthlyBudgetInfoDto;
 import pl.jakubpradzynski.crispus.dto.TransactionDto;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,10 +20,53 @@ import java.util.stream.Collectors;
  * @since 03.06.2018r.
  */
 @Repository
-public class TransactionRepository {
+public class TransactionRepository extends RepositoryClass<Transaction> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) create in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void create(Transaction transaction) {
+        entityManager.persist(transaction);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) getById in RepositoryClass}
+     */
+    @Override
+    public Transaction getById(Integer id) {
+        return entityManager.find(Transaction.class, id);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) delete in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void delete(Transaction transaction) {
+        entityManager.remove(transaction);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) remove in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void remove(Integer id) {
+        entityManager.createQuery("DELETE FROM TRANSACTION t WHERE t.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) update in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void update(Transaction transaction) {
+        entityManager.merge(transaction);
+    }
 
     @Autowired
     private AccountRepository accountRepository;
@@ -54,21 +95,6 @@ public class TransactionRepository {
         Transaction transaction = new Transaction(description, user, account, value, date, place, category);
         accountRepository.updateAccountAfterTransaction(account, value);
         entityManager.persist(transaction);
-    }
-
-    @Transactional
-    public void createTransaction(Transaction transaction) {
-        accountRepository.updateAccountAfterTransaction(transaction.getAccount(), transaction.getValue());
-        entityManager.persist(transaction);
-    }
-
-    /**
-     * Method returns transaction specific by id.
-     * @param id - transaction id
-     * @return Transaction
-     */
-    public Transaction getTransactionById(Integer id) {
-        return entityManager.find(Transaction.class, id);
     }
 
     public Transaction getUserTransactionByDate(User user, Date date) {
@@ -122,11 +148,6 @@ public class TransactionRepository {
                 .getSingleResult();
     }
 
-    @Transactional
-    public void updateTransaction(Transaction transaction) {
-        entityManager.merge(transaction);
-    }
-
     /**
      * Method updates transaction specific by id in database.
      * @param id - transaction id
@@ -144,22 +165,6 @@ public class TransactionRepository {
                 .setParameter("date", format.parse(transactionDto.getDate()))
                 .setParameter("place", !transactionDto.getPlaceName().equals("") ? placeRepository.getPlaceByName(transactionDto.getPlaceName()) : null)
                 .setParameter("category", !transactionDto.getTransactionCategoryName().equals("") ? categoryRepository.getCategoryByName(transactionDto.getTransactionCategoryName()) : null)
-                .setParameter("id", id)
-                .executeUpdate();
-    }
-
-    @Transactional
-    public void deleteTransaction(Integer id) {
-        entityManager.remove(id);
-    }
-
-    /**
-     * Method removes transaction specific by id.
-     * @param id - transaction id
-     */
-    @Transactional
-    public void removeTransaction(Integer id) {
-        entityManager.createQuery("DELETE FROM TRANSACTION t WHERE t.id=:id")
                 .setParameter("id", id)
                 .executeUpdate();
     }

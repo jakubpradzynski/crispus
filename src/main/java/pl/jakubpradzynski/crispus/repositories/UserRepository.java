@@ -1,13 +1,8 @@
 package pl.jakubpradzynski.crispus.repositories;
 
 import org.springframework.stereotype.Repository;
-import pl.jakubpradzynski.crispus.domain.Place;
-import pl.jakubpradzynski.crispus.domain.Category;
-import pl.jakubpradzynski.crispus.domain.User;
-import pl.jakubpradzynski.crispus.domain.UserType;
+import pl.jakubpradzynski.crispus.domain.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.List;
@@ -21,28 +16,58 @@ import java.util.Set;
  * @since 03.06.2018r.
  */
 @Repository
-public class UserRepository {
+public class UserRepository extends RepositoryClass<User> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) create in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void create(User user) {
+        entityManager.persist(user);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) getById in RepositoryClass}
+     */
+    @Override
+    public User getById(Integer id) {
+        return entityManager.find(User.class, id);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) delete in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void delete(User user) {
+        entityManager.remove(user);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) remove in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void remove(Integer id) {
+        entityManager.createQuery("DELETE FROM USER u WHERE u.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) update in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void update(User user) {
+        entityManager.merge(user);
+    }
 
     @Transactional
     public void createUser(String name, String surname, String email, String passwordHash, String salt, String phoneNumber, UserType userType, Set<Place> placeList, Set<Category> categoryList) {
         User user = new User(email, passwordHash, salt, name, surname, phoneNumber, userType, placeList, categoryList);
         entityManager.persist(user);
-    }
-
-    /**
-     * Method creates new user in database.
-     * @param user - user which will be saved
-     */
-    @Transactional
-    public void createUser(User user) {
-        entityManager.persist(user);
-    }
-
-    public User getUserById(Integer id) {
-        return entityManager.find(User.class, id);
     }
 
     /**
@@ -61,16 +86,6 @@ public class UserRepository {
     public Collection<User> getAllUsers() {
         return entityManager.createQuery("SELECT u FROM USERS u", User.class)
                 .getResultList();
-    }
-
-    @Transactional
-    public void updateUser(User user) {
-        entityManager.merge(user);
-    }
-
-    @Transactional
-    public void deleteUser(Integer id) {
-        entityManager.remove(id);
     }
 
     /**

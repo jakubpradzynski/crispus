@@ -39,8 +39,8 @@ public class CategoryService {
     private TransactionRepository transactionRepository;
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns number of used categories by user after calling Category Repository for this data.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns number of used categories by user after calling Category RepositoryClass for this data.
      * @param username - user's email
      * @return Integer (user used categories number)
      */
@@ -50,8 +50,8 @@ public class CategoryService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns number of available categories for user after calling Category Repository for this data.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns number of available categories for user after calling Category RepositoryClass for this data.
      * @param username - user's email
      * @return Integer (user available category number)
      */
@@ -61,7 +61,7 @@ public class CategoryService {
     }
 
     /**
-     * Method returns all predefined categories info after calling Category Repository for this data.
+     * Method returns all predefined categories info after calling Category RepositoryClass for this data.
      * @return List of CategoryDto
      */
     public List<CategoryDto> getPreDefinedCategories() {
@@ -72,8 +72,8 @@ public class CategoryService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns categories created by user after calling Category Repository for this data.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns categories created by user after calling Category RepositoryClass for this data.
      * @param username - user's email
      * @return List of CategoryDto
      */
@@ -86,8 +86,8 @@ public class CategoryService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Creates new user category by call a function from Category Repository and validate if category has already exist.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Creates new user category by call a function from Category RepositoryClass and validate if category has already exist.
      * @param username - user's email
      * @param categoryDto - new category data
      * @throws CategoryExistsException - Exception thrown after trying create category which already exists.
@@ -104,7 +104,7 @@ public class CategoryService {
                 throw new CategoryExistsException("Użytkownik już stworzył taką kategorię");
             }
             category.getUsers().add(user);
-            categoryRepository.updateCategory(category);
+            categoryRepository.update(category);
         } else {
             Set<User> users = new HashSet<>(Arrays.asList(user));
             categoryRepository.createTransactionCategory(categoryDto.getName(), users, 'F');
@@ -117,11 +117,11 @@ public class CategoryService {
      * @return CategoryDto
      */
     public CategoryDto getTransactionCategoryDtoById(Integer id) {
-        return CategoryDto.fromTransactionCategory(categoryRepository.getCategoryById(id));
+        return CategoryDto.fromTransactionCategory(categoryRepository.getById(id));
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * Returns list of transactions info assigned to category in specific range.
      * @param username - user's email
      * @param id - category id
@@ -131,7 +131,7 @@ public class CategoryService {
      */
     public List<TransactionDto> getUserCategoryTransactionsDtoByIdInRange(String username, Integer id, Integer start, Integer max) {
         User user = userRepository.getUserByEmail(username);
-        Category category = categoryRepository.getCategoryById(id);
+        Category category = categoryRepository.getById(id);
         List<Transaction> transactions = (List<Transaction>) transactionRepository.getUserTransactionsAssignedToCategoryInRange(user, category, start, max);
         List<TransactionDto> transactionDtos = new ArrayList<>();
         if (!transactions.isEmpty()) transactions.forEach(transaction -> transactionDtos.add(TransactionDto.fromTransaction(transaction)));
@@ -139,7 +139,7 @@ public class CategoryService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * Removes user category if category has assigned only one user or remove user from set of users in category.
      * @param username - user's email
      * @param id - category id
@@ -147,18 +147,18 @@ public class CategoryService {
     @Transactional
     public void removeUserCategory(String username, Integer id) {
         User user = userRepository.getUserByEmail(username);
-        Category category = categoryRepository.getCategoryById(id);
+        Category category = categoryRepository.getById(id);
         transactionRepository.removeCategoryFromTransacitons(user, category);
         if (category.getUsers().size() == 1) {
-            categoryRepository.removeCategory(id);
+            categoryRepository.remove(id);
         } else {
             category.getUsers().remove(user);
-            categoryRepository.updateCategory(category);
+            categoryRepository.update(category);
         }
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * Change user's category name if new name hasn't already exist and category has only one assigned user or create new category with new name,
      * swap transactions assigned to old category to new category,
      * remove user from set of users in old category.
@@ -170,7 +170,7 @@ public class CategoryService {
     @Transactional
     public Integer changeUserCategoryName(String username, CategoryDto categoryDto) throws CategoryExistsException {
         User user = userRepository.getUserByEmail(username);
-        Category oldCategory = categoryRepository.getCategoryById(categoryDto.getId());
+        Category oldCategory = categoryRepository.getById(categoryDto.getId());
         Category newCategory = categoryRepository.getCategoryByName(categoryDto.getName());
         if (oldCategory.getUsers().size() == 1) {
             if (newCategory == null) {
@@ -180,9 +180,9 @@ public class CategoryService {
                 throw new CategoryExistsException("Nie możesz zmienić nazwę miejsca na nazwę już istniejącego!");
             } else {
                 newCategory.getUsers().add(user);
-                categoryRepository.updateCategory(newCategory);
+                categoryRepository.update(newCategory);
                 transactionRepository.changeCategoryInUserTransactions(user, oldCategory, newCategory);
-                categoryRepository.removeCategory(oldCategory.getId());
+                categoryRepository.remove(oldCategory.getId());
                 return newCategory.getId();
             }
         } else {
@@ -191,16 +191,16 @@ public class CategoryService {
                 Category createdCategory = categoryRepository.getCategoryByName(categoryDto.getName());
                 transactionRepository.changeCategoryInUserTransactions(user, oldCategory, createdCategory);
                 oldCategory.getUsers().remove(user);
-                categoryRepository.updateCategory(oldCategory);
+                categoryRepository.update(oldCategory);
                 return createdCategory.getId();
             } else if (newCategory.getUsers().contains(user)) {
                 throw new CategoryExistsException("Nie możesz zmienić nazwę miejsca na nazwę już istniejącego!");
             } else {
                 newCategory.getUsers().add(user);
-                categoryRepository.updateCategory(newCategory);
+                categoryRepository.update(newCategory);
                 transactionRepository.changeCategoryInUserTransactions(user, oldCategory, newCategory);
                 oldCategory.getUsers().remove(user);
-                categoryRepository.updateCategory(oldCategory);
+                categoryRepository.update(oldCategory);
                 return newCategory.getId();
             }
         }

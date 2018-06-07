@@ -60,7 +60,7 @@ public class LoginController {
             (@ModelAttribute("user") @Valid UserLoginDto userLoginDto,
              BindingResult result, HttpSession httpSession) {
         if (result.hasErrors()) {
-            return new ModelAndView("/login", "user", userLoginDto);
+            return new ModelAndView("login", "user", userLoginDto);
         }
         if (userService.loginCheck(userLoginDto)) {
             httpSession.setAttribute("username", userLoginDto.getLogin());
@@ -68,7 +68,7 @@ public class LoginController {
         } else {
             result.rejectValue("password", "Niepoprawny login lub hasło!");
         }
-        return new ModelAndView("/login", "user", userLoginDto);
+        return new ModelAndView("login", "user", userLoginDto);
     }
 
     /**

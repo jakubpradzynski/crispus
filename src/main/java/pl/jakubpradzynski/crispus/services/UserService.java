@@ -80,7 +80,7 @@ public class UserService {
 
         if (user == null) return user;
 
-        userRepository.createUser(user);
+        userRepository.create(user);
         accountRepository.createAccount(user, "Konto podstawowe", 0.);
 
         return user;

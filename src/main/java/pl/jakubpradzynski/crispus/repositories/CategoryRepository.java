@@ -5,8 +5,6 @@ import pl.jakubpradzynski.crispus.domain.Category;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.dto.CategoryDto;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,10 +20,53 @@ import java.util.stream.Collectors;
  * @since 03.06.2018r.
  */
 @Repository
-public class CategoryRepository {
+public class CategoryRepository extends RepositoryClass<Category> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) create in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void create(Category category) {
+        entityManager.persist(category);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) getById in RepositoryClass}
+     */
+    @Override
+    public Category getById(Integer id) {
+        return entityManager.find(Category.class, id);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) delete in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void delete(Category category) {
+        entityManager.remove(category);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) remove in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void remove(Integer id) {
+        entityManager.createQuery("DELETE FROM CATEGORY c WHERE c.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) update in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void update(Category category) {
+        entityManager.merge(category);
+    }
 
     /**
      * Method create new category in database.
@@ -37,20 +78,6 @@ public class CategoryRepository {
     public void createTransactionCategory(String name, Set<User> userSet, Character isPredefined) {
         Category category = new Category(name, userSet, isPredefined);
         entityManager.persist(category);
-    }
-
-    @Transactional
-    public void createCategory(Category category) {
-        entityManager.persist(category);
-    }
-
-    /**
-     * Method returns category specific by id.
-     * @param id - category id
-     * @return Category
-     */
-    public Category getCategoryById(Integer id) {
-        return entityManager.find(Category.class, id);
     }
 
     /**
@@ -135,20 +162,6 @@ public class CategoryRepository {
     }
 
     /**
-     * Method update category.
-     * @param category - updated category
-     */
-    @Transactional
-    public void updateCategory(Category category) {
-        entityManager.merge(category);
-    }
-
-    @Transactional
-    public void deleteTransactionCategory(Integer id) {
-        entityManager.remove(id);
-    }
-
-    /**
      * Method returns categories created by specific user.
      * @param user - user which created categories we want to receive
      * @return List of Category (created by user)
@@ -158,17 +171,6 @@ public class CategoryRepository {
                 .setParameter("user", user)
                 .setParameter("isPredefined", 'F')
                 .getResultList();
-    }
-
-    /**
-     * Methods remove category specific by id.
-     * @param id - category id
-     */
-    @Transactional
-    public void removeCategory(Integer id) {
-        entityManager.createQuery("DELETE FROM CATEGORY tc WHERE tc.id=:id")
-                .setParameter("id", id)
-                .executeUpdate();
     }
 
     /**

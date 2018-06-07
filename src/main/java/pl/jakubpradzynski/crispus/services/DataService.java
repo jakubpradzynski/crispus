@@ -38,7 +38,7 @@ public class DataService {
     private AccountService accountService;
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * Returns data about user such as used number of accounts, places and categories, and limits from user type.
      * @param username - user's email
      * @return PublicUserData
@@ -53,8 +53,8 @@ public class DataService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns last ten transactions info after call a function from Transaction Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns last ten transactions info after call a function from Transaction RepositoryClass.
      * @param username - user's email
      * @return List of TransactionDto
      */
@@ -65,8 +65,8 @@ public class DataService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns accounts names available for user after call a function from Account Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns accounts names available for user after call a function from Account RepositoryClass.
      * @param username - user's email
      * @return List of String (accounts names)
      */
@@ -77,8 +77,8 @@ public class DataService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns places names available for user after call a function from Place Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns places names available for user after call a function from Place RepositoryClass.
      * @param username - user's email
      * @return List of String (places names)
      */
@@ -89,8 +89,8 @@ public class DataService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns categories names available for user after call a function from Category Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns categories names available for user after call a function from Category RepositoryClass.
      * @param username - user's email
      * @return List of String (categories names)
      */

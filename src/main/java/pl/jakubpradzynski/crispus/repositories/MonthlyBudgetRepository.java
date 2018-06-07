@@ -4,8 +4,6 @@ import org.springframework.stereotype.Repository;
 import pl.jakubpradzynski.crispus.domain.*;
 import pl.jakubpradzynski.crispus.dto.MonthlyBudgetInfoDto;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
@@ -17,10 +15,53 @@ import java.util.*;
  * @since 03.06.2018r.
  */
 @Repository
-public class MonthlyBudgetRepository {
+public class MonthlyBudgetRepository extends RepositoryClass<MonthlyBudget> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) create in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void create(MonthlyBudget monthlyBudget) {
+        entityManager.persist(monthlyBudget);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) getById in RepositoryClass}
+     */
+    @Override
+    public MonthlyBudget getById(Integer id) {
+        return entityManager.find(MonthlyBudget.class, id);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) delete in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void delete(MonthlyBudget monthlyBudget) {
+        entityManager.remove(monthlyBudget);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) remove in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void remove(Integer id) {
+        entityManager.createQuery("DELETE FROM MONTHLY_BUDGET mb WHERE mb.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) update in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void update(MonthlyBudget monthlyBudget) {
+        entityManager.merge(monthlyBudget);
+    }
 
     /**
      * Methods create new budget in database.
@@ -33,20 +74,6 @@ public class MonthlyBudgetRepository {
     public void createMonthlyBudget(User user, Date startDate, Date endDate, Double amount) {
         MonthlyBudget monthlyBudget = new MonthlyBudget(user, startDate, endDate, amount);
         entityManager.persist(monthlyBudget);
-    }
-
-    @Transactional
-    public void createMonthlyBudget(MonthlyBudget monthlyBudget) {
-        entityManager.persist(monthlyBudget);
-    }
-
-    /**
-     * Methods returns monthly budget specific by id.
-     * @param id - budget id
-     * @return MonthlyBudget
-     */
-    public MonthlyBudget getMonthlyBudgetById(Integer id) {
-        return entityManager.find(MonthlyBudget.class, id);
     }
 
     public MonthlyBudget getUserMonthlyBudgetByDate(User user, Date date) {
@@ -65,16 +92,6 @@ public class MonthlyBudgetRepository {
         return entityManager.createQuery("SELECT mb FROM MONTHLY_BUDGET mb WHERE mb.user=:user", MonthlyBudget.class)
                 .setParameter("user", user)
                 .getResultList();
-    }
-
-    @Transactional
-    public void updateMonthlyBudget(MonthlyBudget monthlyBudget) {
-        entityManager.merge(monthlyBudget);
-    }
-
-    @Transactional
-    public void deleteMonthlyBudget(Integer id) {
-        entityManager.remove(id);
     }
 
     /**

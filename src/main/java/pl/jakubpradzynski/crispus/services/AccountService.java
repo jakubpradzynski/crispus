@@ -41,8 +41,8 @@ public class AccountService {
     private UserTypeRepository userTypeRepository;
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns user used accounts number after asking Account Repository for this data.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns user used accounts number after asking Account RepositoryClass for this data.
      * @param username - user's email
      * @return Integer (user used accounts number)
      */
@@ -57,8 +57,8 @@ public class AccountService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Finds Account class object asking Account Repository for account by name.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Finds Account class object asking Account RepositoryClass for account by name.
      * Returns transaction expanses amount for previously found account.
      * @param username - user's email
      * @param accountName - name of account
@@ -71,8 +71,8 @@ public class AccountService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Finds Account class object asking Account Repository for account by name.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Finds Account class object asking Account RepositoryClass for account by name.
      * Returns transaction revenues amount for previously found account.
      * @param username - user's email
      * @param accountName - name of account
@@ -85,8 +85,8 @@ public class AccountService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Finds Account class object asking Account Repository for account by name.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Finds Account class object asking Account RepositoryClass for account by name.
      * Returns amount of money for previously found account.
      * @param username - user's email
      * @param accountName - name of account which money amount we want to receive
@@ -99,7 +99,7 @@ public class AccountService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * For each account name create AccountValuesDto with information about: expanses, revenues and money amount.
      * @param username - user's email
      * @param accountNames - names of accounts
@@ -121,8 +121,8 @@ public class AccountService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns account number available for user after asking User Type Repository for this data.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns account number available for user after asking User Type RepositoryClass for this data.
      * @param username - user's email
      * @return Integer (user available account number)
      */
@@ -132,8 +132,8 @@ public class AccountService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Changes user's account name by calling function from Account Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Changes user's account name by calling function from Account RepositoryClass.
      * @param username - user's email
      * @param changeAccountNameDto - data for changing account name
      */
@@ -144,8 +144,8 @@ public class AccountService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Creates new user account by calling function from Account Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Creates new user account by calling function from Account RepositoryClass.
      * @param newAccountDto - data about new account
      */
     @Transactional
@@ -155,7 +155,7 @@ public class AccountService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * Removes user's account with all transactions assigned to this account.
      * @param removeAccountDto - data about removing account
      */
@@ -164,7 +164,7 @@ public class AccountService {
         User user = userRepository.getUserByEmail(removeAccountDto.getUsername());
         Account account = accountRepository.getUserAccountByName(user, removeAccountDto.getName());
         List<Transaction> accountTransactions = (List<Transaction>) transactionRepository.getAllTransactionsAssignedToAccount(account);
-        accountTransactions.forEach(transaction -> transactionRepository.removeTransaction(transaction.getId()));;
-        accountRepository.removeAccount(account.getId());
+        accountTransactions.forEach(transaction -> transactionRepository.remove(transaction.getId()));;
+        accountRepository.remove(account.getId());
     }
 }

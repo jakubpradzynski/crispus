@@ -40,8 +40,8 @@ public class MonthlyBudgetService {
     private TransactionRepository transactionRepository;
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns info about actual monthly budget if exists or null after receive data from Monthly Budget Repository and Transaction Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns info about actual monthly budget if exists or null after receive data from Monthly Budget RepositoryClass and Transaction RepositoryClass.
      * @param username - user's email
      * @return MonthlyBudgetInfoDto
      */
@@ -55,8 +55,8 @@ public class MonthlyBudgetService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns info about last user's monthly budgets after receive data from Monthly Budget Repository and Transaction Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns info about last user's monthly budgets after receive data from Monthly Budget RepositoryClass and Transaction RepositoryClass.
      * @param username - user's email
      * @return List of MonthlyBudgetInfoDto
      */
@@ -73,7 +73,7 @@ public class MonthlyBudgetService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
      * Returns sorted list of info about monthly budgets.
      * Sort descending by date.
      * @param monthlyBudgetInfoDtoList - list of bugets info to sort
@@ -86,8 +86,8 @@ public class MonthlyBudgetService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Calls a function from Monthly Budget Repository to create new user's monthly budget.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Calls a function from Monthly Budget RepositoryClass to create new user's monthly budget.
      * @param username - user's email
      * @param newMonthlyBudgetDto - data about new user's monthly budget
      * @throws ParseException  - Exception is thrown when it is impossible to parse the date from the string.
@@ -99,21 +99,21 @@ public class MonthlyBudgetService {
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns info about budget specific by id after receive data from Monthly Budget Repository and Transaction Repository.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns info about budget specific by id after receive data from Monthly Budget RepositoryClass and Transaction RepositoryClass.
      * @param id - budget id
      * @return MonthlyBudgetInfoDto
      */
     public MonthlyBudgetInfoDto getBudgetInfoById(Integer id) {
-        MonthlyBudgetInfoDto monthlyBudgetInfoDto = MonthlyBudgetInfoDto.fromMonthlyBudget(monthlyBudgetRepository.getMonthlyBudgetById(id));
+        MonthlyBudgetInfoDto monthlyBudgetInfoDto = MonthlyBudgetInfoDto.fromMonthlyBudget(monthlyBudgetRepository.getById(id));
         monthlyBudgetInfoDto.setUsedAmount(transactionRepository.getUserBudgetUsedAmount(userRepository.getUserByEmail(monthlyBudgetInfoDto.getUsername()), monthlyBudgetInfoDto));
         monthlyBudgetInfoDto.setDifference(monthlyBudgetInfoDto.getAmount() + monthlyBudgetInfoDto.getUsedAmount());
         return monthlyBudgetInfoDto;
     }
 
     /**
-     * Method finds User class object asking User Repository for user by specific email.
-     * Returns list of transactions info in the budget after calling Transaction Repository for this data.
+     * Method finds User class object asking User RepositoryClass for user by specific email.
+     * Returns list of transactions info in the budget after calling Transaction RepositoryClass for this data.
      * @param username - user's email
      * @param monthlyBudgetInfoDto - info about budget which transactions we want to receive
      * @return List of TransactionDto

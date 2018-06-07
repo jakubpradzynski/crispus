@@ -5,8 +5,6 @@ import pl.jakubpradzynski.crispus.domain.Place;
 import pl.jakubpradzynski.crispus.domain.User;
 import pl.jakubpradzynski.crispus.dto.PlaceDto;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,10 +17,53 @@ import java.util.stream.Collectors;
  * @since 03.06.2018r.
  */
 @Repository
-public class PlaceRepository {
+public class PlaceRepository extends RepositoryClass<Place> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) create in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void create(Place place) {
+        entityManager.persist(place);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) getById in RepositoryClass}
+     */
+    @Override
+    public Place getById(Integer id) {
+        return entityManager.find(Place.class, id);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) delete in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void delete(Place place) {
+        entityManager.remove(place);
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) remove in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void remove(Integer id) {
+        entityManager.createQuery("DELETE FROM PLACE p WHERE p.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    /**
+     * {@link pl.jakubpradzynski.crispus.repositories.RepositoryClass#create(Object) update in RepositoryClass}
+     */
+    @Override
+    @Transactional
+    public void update(Place place) {
+        entityManager.merge(place);
+    }
 
     /**
      * Method create new place in database.
@@ -34,20 +75,6 @@ public class PlaceRepository {
     public void createPlace(String name, Set<User> userSet, Character isPredefined) {
         Place place = new Place(name, userSet, isPredefined);
         entityManager.persist(place);
-    }
-
-    @Transactional
-    public void createPlace(Place place) {
-        entityManager.persist(place);
-    }
-
-    /**
-     * Methods returns place specific by id.
-     * @param id - place id
-     * @return Place
-     */
-    public Place getPlaceById(Integer id) {
-        return entityManager.find(Place.class, id);
     }
 
     /**
@@ -124,20 +151,6 @@ public class PlaceRepository {
     }
 
     /**
-     * Method update place in database.
-     * @param place - place which we want to update
-     */
-    @Transactional
-    public void updatePlace(Place place) {
-        entityManager.merge(place);
-    }
-
-    @Transactional
-    public void deletePlace(Integer id) {
-        entityManager.remove(id);
-    }
-
-    /**
      * Method returns places created by user.
      * @param user - user which places we want to receive
      * @return List of Place (places created by user)
@@ -147,17 +160,6 @@ public class PlaceRepository {
                 .setParameter("user", user)
                 .setParameter("isPredefined", 'F')
                 .getResultList();
-    }
-
-    /**
-     * Method removes place specific by id.
-     * @param id - place id
-     */
-    @Transactional
-    public void removePlace(Integer id) {
-        entityManager.createQuery("DELETE FROM PLACE p WHERE p.id=:id")
-                .setParameter("id", id)
-                .executeUpdate();
     }
 
     /**
