@@ -24,4 +24,5 @@ dist/
 nbdist/
 .nb-gradle/
 
-
+out/
+ojdbc8.jar
