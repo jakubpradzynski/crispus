@@ -16,6 +16,7 @@ import pl.jakubpradzynski.crispus.services.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The program's starting class.
@@ -41,8 +42,15 @@ public class Starter implements CommandLineRunner {
         sessionLocaleResolver.setDefaultLocale(Locale.forLanguageTag("pl"));
         if (userRepository.getUserByEmail("jankowalski@gmail.com") == null) {
             Runnable runnable = () -> initDB();
-            Thread initThread = new Thread(runnable,"Wątek initializujący dane w bazie danych");
+            Thread initThread = new Thread(runnable,"Inicjalizacja");
             initThread.start();
+            if (initThread.isAlive()) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
