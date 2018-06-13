@@ -44,12 +44,10 @@ public class Starter implements CommandLineRunner {
             Runnable runnable = () -> initDB();
             Thread initThread = new Thread(runnable,"Inicjalizacja");
             initThread.start();
-            if (initThread.isAlive()) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                TimeUnit.MILLISECONDS.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
